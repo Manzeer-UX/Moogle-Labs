@@ -10,6 +10,11 @@
 
 export const site = {
   name: "MoogleLabs",
+  /** Home page variants, shown in the "Home" dropdown. */
+  homes: [
+    { label: "Home 1", href: "/" },
+    { label: "Home 2", href: "/home-2" },
+  ],
   nav: [
     { label: "Services", href: "#services" },
     { label: "Industries", href: "#industries" },
@@ -24,8 +29,8 @@ export const site = {
 export const hero = {
   eyebrow: "Enterprise AI Engineering",
   title: {
-    lead: "From experimental AI",
-    tail: "to production-grade AI",
+    lead: "From Experimental AI",
+    tail: "to Production Intelligence",
   },
   body: "Most enterprise AI stalls between proof-of-concept and deployment. We engineer secure, governed, cost-efficient AI platforms that run reliably at scale inside your core operations.",
   primaryCta: { label: "Discuss Your AI Roadmap", href: "#next-steps" },
@@ -284,14 +289,14 @@ export const why = {
 
 export const operatingModel = {
   eyebrow: "From one use case to an operating model",
-  title: { lead: "No isolated AI apps.", pre: "We build", highlight: "AI that scales." },
-  body: "Once the first use case proves value, we put the foundations in place so every next one is faster, cheaper and safer.",
+  title: { lead: "We don't build isolated AI apps.", pre: "We build", highlight: "AI that scales." },
+  body: "Once the first use case proves value, we put the architecture, data foundation, governance, reusable components and engineering practices in place, so every next use case is faster, cheaper and safer.",
   axis: "Business value",
   foundationsLabel: "Foundations that compound",
   stages: [
     { n: "01", title: "AI experiments", body: "Promising pilots, each built on its own." },
-    { n: "02", title: "Repeatable AI capability", body: "Shared data, platforms and patterns the next use case reuses." },
-    { n: "03", title: "AI-enabled enterprise", body: "AI across business functions: measured, governed, improving." },
+    { n: "02", title: "Repeatable AI capability", body: "Shared data, platforms, governance and patterns the next use case reuses." },
+    { n: "03", title: "AI-enabled enterprise", body: "AI running across business functions, measured, governed and improving." },
   ],
   rows: [
     {

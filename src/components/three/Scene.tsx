@@ -5,12 +5,12 @@ import { Environment, Lightformer } from "@react-three/drei";
 import { Background } from "./Background";
 import { FloorGrid } from "./FloorGrid";
 import { IconTiles } from "./IconTiles";
-import { Mark } from "./Mark";
+import { Mark, type MarkVariant } from "./Mark";
 import { Particles } from "./Particles";
 import { Rig } from "./Rig";
 import { WarpField } from "./WarpField";
 
-export default function Scene({ active }: { active: boolean }) {
+export default function Scene({ active, variant = "logo" }: { active: boolean; variant?: MarkVariant }) {
   return (
     <Canvas
       frameloop={active ? "always" : "never"}
@@ -35,8 +35,8 @@ export default function Scene({ active }: { active: boolean }) {
       </Environment>
 
       <FloorGrid />
-      <Mark />
-      <IconTiles />
+      <Mark variant={variant} />
+      <IconTiles variant={variant} />
       <WarpField />
       <Particles />
     </Canvas>

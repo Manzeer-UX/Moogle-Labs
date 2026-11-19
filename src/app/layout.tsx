@@ -20,7 +20,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "MoogleLabs • Enterprise AI Engineering",
   description:
-    "From experimental AI to production-grade AI. MoogleLabs engineers secure, governed, cost-efficient AI platforms that run reliably at scale inside your core operations.",
+    "From Experimental AI to Production Intelligence. MoogleLabs engineers secure, governed, cost-efficient AI platforms that run reliably at scale inside your core operations.",
 };
 
 export const viewport: Viewport = {

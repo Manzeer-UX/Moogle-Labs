@@ -6,7 +6,6 @@ import { CAPS_BEATS, CAPS_HEAD, CAPS_LEN, capsPanelOnRight, connector, holdOf, o
 import { registerAnchor } from "@/lib/lenis";
 import { capabilities } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { GradientDash } from "@/components/ui/Bits";
 import { categoryIcons, serviceIcons } from "@/components/ui/icons";
 
 /**
@@ -138,12 +137,8 @@ export function Capabilities() {
           className="px-4 pt-28 pb-10 tablet:absolute tablet:bottom-12 tablet:left-8 tablet:max-w-[min(1000px,80vw)] tablet:p-0"
         >
           <Supertitle>{capabilities.eyebrow}</Supertitle>
-          <h2 className="is-h1 mt-5 flex flex-col">
-            <span>{capabilities.title.lead}</span>
-            <span className="flex items-center gap-3 whitespace-nowrap phone:gap-4">
-              <GradientDash />
-              <span>{capabilities.title.tail}</span>
-            </span>
+          <h2 className="is-h1 mt-5 text-balance">
+            {capabilities.title.lead} {capabilities.title.tail}
           </h2>
         </div>
 

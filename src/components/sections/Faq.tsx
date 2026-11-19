@@ -5,7 +5,6 @@ import { LuPlus } from "react-icons/lu";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { faq } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { GradientDash } from "@/components/ui/Bits";
 import { Reveal } from "@/components/ui/Reveal";
 
 export function Faq() {
@@ -48,16 +47,10 @@ export function Faq() {
       <div className="grid gap-12 px-4 tablet:px-8 laptop:grid-cols-12">
         <div className="self-start laptop:sticky laptop:top-32 laptop:col-span-4">
           <Supertitle variant="brand">{faq.eyebrow}</Supertitle>
-          <Reveal as="h2" className="is-h1 mt-6 flex flex-col">
+          <Reveal as="h2" className="is-h1 mt-6">
             <span className="block overflow-hidden pb-[0.04em]">
-              <span data-reveal className="block">
-                {faq.title.lead}
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-[0.04em]">
-              <span data-reveal className="flex items-center gap-3 phone:gap-4">
-                <GradientDash tone="ink" />
-                <span>{faq.title.tail}</span>
+              <span data-reveal className="block text-balance">
+                {faq.title.lead} {faq.title.tail}
               </span>
             </span>
           </Reveal>
