@@ -29,14 +29,31 @@ export function Reveal({ as: Tag = "div", children, className = "", start = "top
       const marked = el.querySelectorAll<HTMLElement>("[data-reveal]");
       const targets = marked.length ? Array.from(marked) : [el];
       gsap.set(targets, { yPercent: 110 });
-      gsap.to(targets, {
+      const tween = gsap.to(targets, {
         yPercent: 0,
         duration: 1.15,
         delay,
         stagger,
         ease: "power4.out",
-        scrollTrigger: { trigger: el, start, once: true },
+        paused: true,
       });
+      // Play when the element is actually on screen. An IntersectionObserver
+      // doesn't depend on pre-measured scroll positions, which go stale after
+      // client-side page switches and layout changes (pins, font swaps) and
+      // could leave headings stuck hidden. `start` ("top 85%") maps to a
+      // bottom margin on the viewport.
+      const pct = Number(/(\d+)%/.exec(start)?.[1] ?? 85);
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            tween.play();
+            io.disconnect();
+          }
+        },
+        { rootMargin: `0px 0px -${100 - pct}% 0px` },
+      );
+      io.observe(el);
+      return () => io.disconnect();
     },
     { scope: ref },
   );

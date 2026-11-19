@@ -7,7 +7,7 @@ import { DELIVERY_LEN, GOVERNANCE_BEAT, STAGE_BEATS, holdOf } from "@/lib/scene"
 import { registerAnchor } from "@/lib/lenis";
 import { delivery } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { BlinkSquare, GradientDash } from "@/components/ui/Bits";
+import { BlinkSquare } from "@/components/ui/Bits";
 import { stageIcons } from "@/components/ui/icons";
 
 /**
@@ -86,12 +86,8 @@ export function DeliveryStages() {
           <Scrim />
           <div className="relative w-full max-w-[720px]">
             <Supertitle variant="brand">{delivery.eyebrow}</Supertitle>
-            <h2 className="is-h1 mt-5 flex flex-col">
-              <span>{delivery.title.lead}</span>
-              <span className="flex items-center gap-3 phone:gap-4">
-                <GradientDash tone="ink" />
-                <span>{delivery.title.tail}</span>
-              </span>
+            <h2 className="is-h1 mt-5 text-balance">
+              {delivery.title.lead} {delivery.title.tail}
             </h2>
             <ol className="mt-8 flex flex-wrap gap-x-2 gap-y-2 font-heading text-[12px] font-semibold uppercase">
               {delivery.stages.map((stage, i) => (

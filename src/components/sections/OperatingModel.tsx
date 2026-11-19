@@ -4,16 +4,17 @@ import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { operatingModel as om } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { BlinkSquare, GradientDash } from "@/components/ui/Bits";
+import { BlinkSquare } from "@/components/ui/Bits";
 import { ChamferButton } from "@/components/ui/Buttons";
 import { Reveal, RevealText } from "@/components/ui/Reveal";
 
 /* Curve through the three stages, in a 1000×380 viewBox. */
-const CURVE = "M0,352 C40,322 70,268 110,250 C230,196 330,170 443,150 C560,128 660,86 776,52 C860,30 930,20 1000,14";
+/* Points sit above each stage card; the cards hang just below them. */
+const CURVE = "M0,262 C40,236 70,212 110,198 C230,160 330,146 443,129 C560,110 660,80 776,61 C860,48 930,36 1000,28";
 const POINTS = [
-  { x: 11, y: 65.8 },
-  { x: 44.3, y: 39.5 },
-  { x: 77.6, y: 13.7 },
+  { x: 11, y: 52.1 },
+  { x: 44.3, y: 33.9 },
+  { x: 77.6, y: 16.1 },
 ];
 const PIP = ["33%", "66%", "100%"];
 
@@ -27,9 +28,13 @@ export function OperatingModel() {
 
       mm.add("(min-width: 1024px)", () => {
         const chart = q("[data-chart]")[0];
+        // Plays through once on entry (no scrub), so the chart is never left
+        // half-drawn with empty space while the visitor reads.
         const tl = gsap.timeline({
-          scrollTrigger: { trigger: chart, start: "top 78%", end: "top 20%", scrub: 0.6 },
+          defaults: { duration: 1 },
+          scrollTrigger: { trigger: chart, start: "top 85%", once: true },
         });
+        tl.timeScale(0.55);
         tl.fromTo(q("[data-curve]"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
         tl.fromTo(q("[data-curve-glow]"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
         q("[data-point]").forEach((point, i) =>
@@ -79,22 +84,14 @@ export function OperatingModel() {
       />
       <div aria-hidden className="bg-dash-grid pointer-events-none absolute inset-0 opacity-20" />
 
-      <div className="relative px-4 py-24 tablet:px-8 laptop:py-32">
+      <div className="relative mx-auto max-w-[1280px] px-4 py-16 tablet:px-8 laptop:py-20">
         <div className="grid gap-10 laptop:grid-cols-12 laptop:items-end">
           <div className="flex flex-col gap-6 laptop:col-span-7">
             <Supertitle>{om.eyebrow}</Supertitle>
-            <Reveal as="h2" className="is-h1 flex flex-col">
+            <Reveal as="h2" className="is-h2">
               <span className="block overflow-hidden pb-[0.04em]">
-                <span data-reveal className="block">
-                  {om.title.lead}
-                </span>
-              </span>
-              <span className="block overflow-hidden pb-[0.04em]">
-                <span data-reveal className="flex items-center gap-3 phone:gap-4">
-                  <GradientDash />
-                  <span>
-                    {om.title.pre} <span className="text-lilac">{om.title.highlight}</span>
-                  </span>
+                <span data-reveal className="block text-balance">
+                  {om.title.lead} {om.title.pre} <span className="text-lilac">{om.title.highlight}</span>
                 </span>
               </span>
             </Reveal>
@@ -105,7 +102,10 @@ export function OperatingModel() {
         </div>
 
         {/* Desktop chart + foundations table */}
-        <div data-chart className="mt-20 hidden grid-cols-[220px_1fr_1fr_1fr] tablet:grid laptop:grid-cols-[260px_1fr_1fr_1fr]">
+        <div
+          data-chart
+          className="mt-10 hidden grid-cols-[180px_repeat(3,minmax(0,1fr))] tablet:grid laptop:grid-cols-[220px_repeat(3,minmax(0,1fr))]"
+        >
           <div className="flex flex-col justify-between border-r border-dashed border-white/20 py-1 pr-6">
             <span className="font-heading text-[12px] font-semibold tracking-[0.18em] text-lilac uppercase">
               {om.axis} ↑
@@ -115,7 +115,7 @@ export function OperatingModel() {
             </span>
           </div>
 
-          <div className="relative col-span-3 h-[480px]">
+          <div className="relative col-span-3 h-[320px] laptop:h-[340px]">
             <div aria-hidden className="absolute inset-y-0 left-1/3 border-l border-dashed border-white/10" />
             <div aria-hidden className="absolute inset-y-0 left-2/3 border-l border-dashed border-white/10" />
             <svg viewBox="0 0 1000 380" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
@@ -153,10 +153,11 @@ export function OperatingModel() {
                 key={i}
                 data-point
                 aria-hidden
-                className="absolute flex size-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-lilac/30"
+                className="absolute flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-lilac/30 shadow-[0_0_18px_rgba(155,132,248,0.7)]"
                 style={{ left: `${p.x}%`, top: `${p.y}%` }}
               >
-                <span className="size-2 rounded-full bg-[#e2daff]" />
+                <span className="absolute inset-0 animate-ping rounded-full bg-lilac/30" />
+                <span className="relative size-2.5 rounded-full bg-[#e2daff]" />
               </span>
             ))}
 
@@ -164,15 +165,17 @@ export function OperatingModel() {
               <article
                 key={stage.n}
                 data-stage-card
-                className={`chamfer absolute w-[30%] p-5 backdrop-blur-md [--cut:12px] ${
-                  i === 2 ? "bg-brand/50 ring-1 ring-lilac/40" : "bg-white/[0.07] ring-1 ring-white/10"
+                className={`chamfer absolute w-[31%] p-5 backdrop-blur-md [--cut:12px] ${
+                  i === 2
+                    ? "bg-gradient-to-br from-brand/60 to-brand-deep/40 shadow-[0_0_48px_rgba(121,93,245,0.45)] ring-1 ring-lilac/50"
+                    : "bg-white/[0.07] ring-1 ring-white/10"
                 }`}
-                style={{ left: `${i * 33.333 + 1.5}%`, top: `calc(${POINTS[i].y}% + 22px)` }}
+                style={{ left: `${i * 33.333 + 1}%`, top: `calc(${POINTS[i].y}% + 20px)` }}
               >
                 <span className="font-heading text-[11px] font-semibold tracking-[0.2em] text-lilac uppercase">
                   Stage {stage.n}
                 </span>
-                <h3 className="mt-2 font-heading text-[19px] leading-tight font-semibold uppercase laptop:text-[21px]">
+                <h3 className="mt-2 font-heading text-[17px] leading-tight font-semibold uppercase laptop:text-[19px]">
                   {stage.title}
                 </h3>
                 <p className="mt-2 text-[12.5px] leading-relaxed text-white/75">{stage.body}</p>
@@ -184,7 +187,7 @@ export function OperatingModel() {
             <div key={row.label} data-om-row className="contents">
               <div
                 data-om-cell
-                className="flex items-center gap-3 border-t border-white/10 py-4 pr-4 font-heading text-[13px] font-semibold uppercase laptop:text-[14px]"
+                className="flex items-center gap-3 border-t border-white/10 py-3.5 pr-4 font-heading text-[12.5px] font-semibold uppercase laptop:text-[13px]"
               >
                 <BlinkSquare className="border-lilac" dot="bg-lilac" />
                 {row.label}
@@ -193,7 +196,7 @@ export function OperatingModel() {
                 <div
                   key={cell}
                   data-om-cell
-                  className="flex items-center gap-3 border-t border-white/10 px-5 py-4 text-[13px] text-white/80"
+                  className="flex min-w-0 items-center gap-3 border-t border-white/10 px-5 py-3.5 text-[13px] text-white/80"
                 >
                   <span className="relative block h-[3px] w-8 shrink-0 bg-white/15">
                     <span data-om-bar className="absolute inset-y-0 left-0 block origin-left bg-lilac" style={{ width: PIP[c] }} />

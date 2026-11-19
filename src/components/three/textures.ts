@@ -98,6 +98,36 @@ export function createIconTexture(path: string) {
   return finish(canvas, draw);
 }
 
+/** Glowing white-lilac line icon on a transparent background (Home 2 glass tiles). */
+export function createGlyphTexture(path: string) {
+  const size = 256;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  const draw = () => {
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    ctx.translate(size / 2 - 60, size / 2 - 60);
+    ctx.scale(5, 5);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    // soft glow pass, then a crisp core pass
+    ctx.shadowColor = "rgba(188,174,255,0.95)";
+    ctx.shadowBlur = 14;
+    ctx.strokeStyle = "#bcaeff";
+    ctx.lineWidth = 2.4;
+    ctx.stroke(new Path2D(path));
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 1.6;
+    ctx.stroke(new Path2D(path));
+    ctx.restore();
+  };
+
+  return finish(canvas, draw);
+}
+
 /** Simple 24×24 line icons used on the floating tiles. */
 export const TILE_ICONS = [
   // target

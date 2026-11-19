@@ -16,6 +16,9 @@ import {
   whyMobileY,
   whyProgress,
 } from "./poses";
+import { ORB_NODES, ORB_RADIUS, OrbBody } from "./Orb";
+
+export type MarkVariant = "logo" | "orb";
 
 /* ------------------------------------------------------------------ */
 /* MoogleLabs logo icon (two strokes + four nodes) from the brand SVG  */
@@ -90,7 +93,8 @@ const GLOW = new THREE.Color("#9d84ff");
 
 const anchor = new THREE.Vector3();
 
-export function Mark() {
+export function Mark({ variant = "logo" }: { variant?: MarkVariant }) {
+  const orb = variant === "orb";
   const group = useRef<THREE.Group>(null);
   const strokeRefs = useRef<(THREE.Group | null)[]>([]);
   const nodeRefs = useRef<(THREE.Group | null)[]>([]);
@@ -132,8 +136,11 @@ export function Mark() {
     const ringMaterials = NODES.map(
       () => new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0, depthWrite: false }),
     );
-    const nodes = NODES.map((n) => ({ pos: toWorld(n.x, n.y, 0.08), radius: n.r * S * 1.25 }));
+    const nodes = orb
+      ? ORB_NODES.map((d) => ({ pos: d.clone().multiplyScalar(ORB_RADIUS * 1.04), radius: 0.12 }))
+      : NODES.map((n) => ({ pos: toWorld(n.x, n.y, 0.08), radius: n.r * S * 1.25 }));
     return { strokes, capGeometry, nodeGeometry, hullGeometry, ringGeometry, strokeMaterial, nodeMaterials, hullMaterials, ringMaterials, nodes };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useFrame((frame, delta) => {
@@ -239,7 +246,8 @@ export function Mark() {
       const node = nodeRefs.current[i];
       const info = parts.nodes[i];
       if (node) {
-        node.position.set(info.pos.x, info.pos.y, info.pos.z + st.spread * 0.45 + h * 0.5);
+        if (orb) node.position.copy(info.pos).multiplyScalar(1 + st.spread * 0.06 + h * 0.22);
+        else node.position.set(info.pos.x, info.pos.y, info.pos.z + st.spread * 0.45 + h * 0.5);
         node.scale.setScalar(info.radius * (1 + h * 0.55 + Math.sin(t * 2 + i) * 0.03));
       }
       const m = parts.nodeMaterials[i];
@@ -295,7 +303,8 @@ export function Mark() {
 
   return (
     <group ref={group} scale={0.0001}>
-      {parts.strokes.map((stroke, i) => (
+      {orb && <OrbBody state={state} />}
+      {!orb && parts.strokes.map((stroke, i) => (
         <group
           key={i}
           ref={(el) => {
@@ -314,16 +323,21 @@ export function Mark() {
             nodeRefs.current[i] = el;
           }}
         >
-          <mesh geometry={parts.nodeGeometry} material={parts.nodeMaterials[i]} />
-          <mesh geometry={parts.hullGeometry} material={parts.hullMaterials[i]} scale={1.16} renderOrder={2} />
-          <mesh
-            ref={(el) => {
-              ringRefs.current[i] = el;
-            }}
-            geometry={parts.ringGeometry}
-            material={parts.ringMaterials[i]}
-            renderOrder={3}
-          />
+          {/* Orb variant: no visible node balls; the group stays as the connector's anchor. */}
+          {!orb && (
+            <>
+              <mesh geometry={parts.nodeGeometry} material={parts.nodeMaterials[i]} />
+              <mesh geometry={parts.hullGeometry} material={parts.hullMaterials[i]} scale={1.16} renderOrder={2} />
+              <mesh
+                ref={(el) => {
+                  ringRefs.current[i] = el;
+                }}
+                geometry={parts.ringGeometry}
+                material={parts.ringMaterials[i]}
+                renderOrder={3}
+              />
+            </>
+          )}
         </group>
       ))}
     </group>

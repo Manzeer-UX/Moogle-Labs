@@ -8,16 +8,6 @@ export function BlinkSquare({ className = "border-white", dot = "bg-white" }: { 
   );
 }
 
-export function GradientDash({ className = "", tone = "white" }: { className?: string; tone?: "white" | "ink" }) {
-  const color = tone === "white" ? "from-white" : "from-ink";
-  return (
-    <span
-      aria-hidden
-      className={`inline-block h-[4px] w-[40px] shrink-0 bg-gradient-to-l to-transparent phone:h-[6px] phone:w-[60px] laptop:w-[120px] ${color} ${className}`}
-    />
-  );
-}
-
 export function Barcode({ className = "bg-ink", bars = 7 }: { className?: string; bars?: number }) {
   return (
     <span aria-hidden className="flex items-center gap-[6px]">

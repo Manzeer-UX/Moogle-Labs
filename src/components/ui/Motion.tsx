@@ -45,13 +45,23 @@ export function GlitchWord({ text, className = "" }: { text: string; className?:
     if (!el) return;
     const letters = Array.from(el.querySelectorAll<HTMLElement>("[data-l]"));
     const timers: number[] = [];
+    // The glitch symbol is drawn in an overlay while the real letter is only
+    // hidden, so every letter keeps its width and nothing around it shifts
+    // (a width change made marquees jump).
     const id = window.setInterval(() => {
       const count = 1 + ((Math.random() * 2) | 0);
       for (let k = 0; k < count; k++) {
         const l = letters[(Math.random() * letters.length) | 0];
-        if (!l || l.dataset.l === " ") continue;
-        l.textContent = GLITCH[(Math.random() * GLITCH.length) | 0];
-        timers.push(window.setTimeout(() => (l.textContent = l.dataset.l ?? ""), 140 + Math.random() * 160));
+        const g = l?.querySelector<HTMLElement>("[data-g]");
+        if (!l || !g || l.dataset.l === " ") continue;
+        g.textContent = GLITCH[(Math.random() * GLITCH.length) | 0];
+        l.dataset.glitch = "";
+        timers.push(
+          window.setTimeout(() => {
+            delete l.dataset.glitch;
+            g.textContent = "";
+          }, 140 + Math.random() * 160),
+        );
       }
     }, 900 + Math.random() * 600);
     return () => {
@@ -63,8 +73,14 @@ export function GlitchWord({ text, className = "" }: { text: string; className?:
   return (
     <span ref={ref} className={`inline-flex ${className}`} aria-label={text}>
       {text.split("").map((ch, i) => (
-        <span key={i} data-l={ch} aria-hidden className={ch === " " ? "w-[0.35em]" : ""}>
-          {ch}
+        <span
+          key={i}
+          data-l={ch}
+          aria-hidden
+          className={`relative inline-block ${ch === " " ? "w-[0.35em]" : ""}`}
+        >
+          <span className="[[data-glitch]>&]:opacity-0">{ch}</span>
+          <span data-g className="absolute inset-0 flex justify-center" />
         </span>
       ))}
     </span>
@@ -81,8 +97,9 @@ export function BigMarquee({ items, className = "" }: { items: string[]; classNa
     () => {
       const track = root.current?.querySelector<HTMLElement>("[data-track]");
       if (!track) return;
-      const loop = gsap.to(track, { xPercent: -50, ease: "none", duration: 70, repeat: -1 });
-      const boost = gsap.quickTo(loop, "timeScale", { duration: 0.6, ease: "power3.out" });
+      const loop = gsap.to(track, { xPercent: -50, ease: "none", duration: 60, repeat: -1, force3D: true });
+      // Scrolling gives a gentle, eased speed-up that glides back to normal.
+      const boost = gsap.quickTo(loop, "timeScale", { duration: 1.2, ease: "power2.out" });
       let settle = 0;
       ScrollTrigger.create({
         trigger: root.current,
@@ -90,9 +107,9 @@ export function BigMarquee({ items, className = "" }: { items: string[]; classNa
         end: "bottom top",
         onUpdate: (self) => {
           const v = Math.abs(self.getVelocity());
-          boost(1 + Math.min(v / 180, 8));
+          boost(1 + Math.min(v / 600, 2.5));
           window.clearTimeout(settle);
-          settle = window.setTimeout(() => boost(1), 160);
+          settle = window.setTimeout(() => boost(1), 250);
         },
         onToggle: (self) => (self.isActive ? loop.play() : loop.pause()),
       });
@@ -111,7 +128,7 @@ export function BigMarquee({ items, className = "" }: { items: string[]; classNa
                 <GlitchWord text={item} className="shrink-0" />
                 <span
                   aria-hidden
-                  className="mx-8 inline-block h-2 w-[80px] shrink-0 translate-y-[0.1em] bg-gradient-to-l from-white to-transparent phone:h-3 phone:w-[140px] tablet:mx-16 tablet:h-4 tablet:w-[240px] laptop:h-6"
+                  className="mx-6 inline-block h-1.5 w-[56px] shrink-0 translate-y-[0.1em] bg-gradient-to-l from-white to-transparent phone:h-2 phone:w-[90px] tablet:mx-12 tablet:h-3 tablet:w-[150px] laptop:h-4"
                 />
               </Fragment>
             ))}

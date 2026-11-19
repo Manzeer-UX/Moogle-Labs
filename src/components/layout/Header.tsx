@@ -1,7 +1,9 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
-import { LuMenu, LuX } from "react-icons/lu";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { LuChevronDown, LuMenu, LuX } from "react-icons/lu";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { scene } from "@/lib/scene";
 import { site } from "@/content/site";
@@ -16,6 +18,9 @@ import { getLenis } from "@/lib/lenis";
 export function Header() {
   const ref = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  // Section anchors exist on every home variant; from other pages, jump back to Home 1.
+  const anchorBase = site.homes.some((h) => h.href === pathname) ? "" : "/";
 
   useGSAP(
     () => {
@@ -78,18 +83,17 @@ export function Header() {
             aria-label="Primary"
             className="hidden items-center gap-3 font-heading text-[13px] font-semibold uppercase tablet:flex"
           >
-            {site.nav.map((item, i) => (
+            <HomeDropdown pathname={pathname} />
+            {site.nav.map((item) => (
               <Fragment key={item.href}>
-                {i > 0 && (
-                  <span
-                    aria-hidden
-                    className="text-ink/60 transition-colors duration-500 group-data-[theme=dark]/h:text-white/60"
-                  >
-                    /
-                  </span>
-                )}
+                <span
+                  aria-hidden
+                  className="text-ink/60 transition-colors duration-500 group-data-[theme=dark]/h:text-white/60"
+                >
+                  /
+                </span>
                 <a
-                  href={item.href}
+                  href={anchorBase + item.href}
                   className="text-ink transition-colors duration-500 hover:text-brand group-data-[theme=dark]/h:text-white group-data-[theme=dark]/h:hover:text-lilac"
                 >
                   <ScrambleText text={item.label} />
@@ -119,12 +123,74 @@ export function Header() {
         </div>
       </div>
 
-      <MobileMenu open={open} onClose={() => setOpen(false)} />
+      <MobileMenu open={open} onClose={() => setOpen(false)} anchorBase={anchorBase} />
     </header>
   );
 }
 
-function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+function HomeDropdown({ pathname }: { pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 uppercase text-ink transition-colors duration-500 hover:text-brand group-data-[theme=dark]/h:text-white group-data-[theme=dark]/h:hover:text-lilac"
+      >
+        <ScrambleText text="Home" />
+        <LuChevronDown className={`size-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+      </button>
+      {/* top padding bridges the gap so hover isn't lost moving into the panel */}
+      <div
+        className={`absolute top-full left-0 pt-3 transition-[opacity,translate] duration-200 ${
+          open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1 opacity-0"
+        }`}
+      >
+        <ul className="chamfer min-w-36 bg-ink/95 p-1.5 backdrop-blur-md [--cut:8px]">
+          {site.homes.map((home) => {
+            const active = pathname === home.href;
+            return (
+              <li key={home.href}>
+                <Link
+                  href={home.href}
+                  aria-current={active ? "page" : undefined}
+                  onClick={() => setOpen(false)}
+                  className={`block px-3 py-2 transition-colors hover:bg-white/10 hover:text-lilac ${
+                    active ? "text-lilac" : "text-white"
+                  }`}
+                >
+                  {home.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function MobileMenu({ open, onClose, anchorBase }: { open: boolean; onClose: () => void; anchorBase: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -175,11 +241,25 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         </button>
       </div>
       <nav className="relative mt-16 flex flex-col gap-2" aria-label="Mobile">
+        <span className="overflow-hidden">
+          <span data-m className="flex flex-wrap items-baseline gap-x-5 gap-y-1 py-1">
+            {site.homes.map((home) => (
+              <Link
+                key={home.href}
+                href={home.href}
+                onClick={onClose}
+                className="font-heading text-[22px] leading-tight font-semibold uppercase text-white/80 hover:text-white"
+              >
+                {home.label}
+              </Link>
+            ))}
+          </span>
+        </span>
         {site.nav.map((item, i) => (
           <span key={item.href} className="overflow-hidden">
             <a
               data-m
-              href={item.href}
+              href={anchorBase + item.href}
               onClick={onClose}
               className="flex items-baseline gap-4 py-1 font-heading text-[34px] leading-tight font-semibold uppercase"
             >

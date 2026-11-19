@@ -4,7 +4,6 @@ import { Fragment, useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { enterprise } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { GradientDash } from "@/components/ui/Bits";
 import { Reveal, RevealText } from "@/components/ui/Reveal";
 import { BigMarquee } from "@/components/ui/Motion";
 import { disciplineIcons } from "@/components/ui/icons";
@@ -50,25 +49,17 @@ export function EnterpriseDelivery() {
       <div className="relative border-y border-white/10 py-6 tablet:py-10">
         <BigMarquee
           items={enterprise.disciplines}
-          className="font-heading text-[88px] leading-[1.05] font-semibold uppercase phone:text-[130px] tablet:text-[190px] laptop:text-[250px]"
+          className="font-heading text-[56px] leading-[1.05] font-semibold uppercase phone:text-[80px] tablet:text-[120px] laptop:text-[160px]"
         />
       </div>
 
       <div className="relative grid gap-12 px-4 py-20 tablet:px-8 laptop:grid-cols-12 laptop:gap-16 laptop:py-28">
         <div className="flex flex-col gap-6 laptop:col-span-7">
           <Supertitle>{enterprise.eyebrow}</Supertitle>
-          <Reveal as="h2" className="is-h2 flex max-w-[760px] flex-col">
+          <Reveal as="h2" className="is-h2 max-w-[760px]">
             <span className="block overflow-hidden pb-[0.04em]">
-              <span data-reveal className="block">
-                {enterprise.title.lead}
-              </span>
-            </span>
-            <span className="block overflow-hidden pb-[0.04em]">
-              <span data-reveal className="flex items-start gap-3 phone:gap-4">
-                <span className="block pt-[0.42em]">
-                  <GradientDash />
-                </span>
-                <span>{enterprise.title.tail}</span>
+              <span data-reveal className="block text-balance">
+                {enterprise.title.lead} {enterprise.title.tail}
               </span>
             </span>
           </Reveal>

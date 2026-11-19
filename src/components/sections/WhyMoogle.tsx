@@ -5,7 +5,6 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import { WHY_BEATS, WHY_LEN } from "@/lib/scene";
 import { why } from "@/content/site";
 import { Supertitle } from "@/components/ui/Supertitle";
-import { GradientDash } from "@/components/ui/Bits";
 import { whyIcons } from "@/components/ui/icons";
 
 /**
@@ -66,14 +65,8 @@ export function WhyMoogle() {
           className="absolute right-4 bottom-8 left-4 tablet:right-auto tablet:bottom-12 tablet:left-8 tablet:max-w-[min(760px,55vw)]"
         >
           <Supertitle variant="brand">{why.eyebrow}</Supertitle>
-          <h2 className="is-h2 mt-5 flex flex-col">
-            <span className="text-balance">{why.title.lead}</span>
-            <span className="flex items-start gap-3 phone:gap-4">
-              <span className="block pt-[0.42em]">
-                <GradientDash tone="ink" />
-              </span>
-              <span className="text-balance">{why.title.tail}</span>
-            </span>
+          <h2 className="is-h2 mt-5 text-balance">
+            {why.title.lead} {why.title.tail}
           </h2>
           <p className="mt-5 max-w-[540px] text-[13.5px] leading-relaxed text-ink/80">{why.body}</p>
         </div>

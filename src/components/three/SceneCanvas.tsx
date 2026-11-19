@@ -5,6 +5,8 @@ import { Component, useEffect, useState, type ReactNode } from "react";
 import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { CAPS_LEN, DELIVERY_LEN, WHY_LEN, onGroupChange, scene, setGroupActive } from "@/lib/scene";
 
+import type { MarkVariant } from "./Mark";
+
 const Scene = dynamic(() => import("./Scene"), { ssr: false });
 
 class WebGLBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { failed: boolean }> {
@@ -22,7 +24,7 @@ class WebGLBoundary extends Component<{ children: ReactNode; fallback: ReactNode
  * scene is visible and feed it progress values; when an opaque section covers
  * the viewport the canvas stops rendering entirely.
  */
-export function SceneCanvas() {
+export function SceneCanvas({ variant = "logo" }: { variant?: MarkVariant }) {
   const [group, setGroup] = useState(scene.group);
 
   useEffect(() => onGroupChange(setGroup), []);
@@ -85,7 +87,7 @@ export function SceneCanvas() {
       <WebGLBoundary
         fallback={<div className="absolute inset-0 bg-gradient-to-r from-ink via-brand to-light-grey" />}
       >
-        <Scene active={group !== null} />
+        <Scene active={group !== null} variant={variant} />
       </WebGLBoundary>
     </div>
   );
