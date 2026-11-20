@@ -6,7 +6,17 @@ import * as THREE from "three";
 import { CAPS_BEATS, scene } from "@/lib/scene";
 import { lerp, range, smooth } from "@/lib/math";
 import { capsIn, capsSwing } from "./poses";
-import { DB_LEVELS, DB_TILT, buildShapeForms, setFormVisibility } from "./ShapeForms";
+import {
+  BLADE,
+  BLADES,
+  CLOUD_BASE,
+  CLOUD_FRONT,
+  DATA_TILT,
+  buildShapeForms,
+  cloudOutline,
+  formAnchors,
+  setFormVisibility,
+} from "./ShapeForms";
 
 /**
  * Particle swarm that lives on the orb's surface and, in the capabilities
@@ -148,32 +158,43 @@ function robotHead() {
 }
 
 function database() {
-  // three stacked discs (matches ShapeForms), tilted so the top shows
-  const R = 1.0;
-  const h = 0.56;
-  const cos = Math.cos(DB_TILT);
-  const sin = Math.sin(DB_TILT);
+  // cloud badge above a two-unit server rack (matches ShapeForms), same tilt
+  const cos = Math.cos(DATA_TILT);
+  const sin = Math.sin(DATA_TILT);
   const tilt = ([x, y, z]: Vec): Vec => [x, y * cos - z * sin, y * sin + z * cos];
-  const side = (y0: number): Sampler => () => {
-    const a = rand() * Math.PI * 2;
-    return tilt([Math.cos(a) * R, y0 + r(-h / 2, h / 2), Math.sin(a) * R]);
+  const outline = cloudOutline();
+  const inside = (x: number, y: number) => {
+    let c = false;
+    for (let i = 0, j = outline.length - 1; i < outline.length; j = i++) {
+      const [xi, yi] = outline[i];
+      const [xj, yj] = outline[j];
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c;
+    }
+    return c;
   };
-  const rim = (y: number): Sampler => () => {
-    const a = rand() * Math.PI * 2;
-    return tilt([Math.cos(a) * R * 0.97, y, Math.sin(a) * R * 0.97]);
+  const cloudFace: Sampler = () => {
+    for (;;) {
+      const x = r(-1.05, 1.15);
+      const y = r(0, 1.27);
+      if (inside(x, y)) return tilt([x, CLOUD_BASE + y, rand() < 0.7 ? CLOUD_FRONT : -CLOUD_FRONT]);
+    }
   };
-  const lid: Sampler = () => {
-    const a = rand() * Math.PI * 2;
-    const d = Math.sqrt(rand()) * (R - 0.1);
-    return tilt([Math.cos(a) * d, DB_LEVELS[0] + h / 2, Math.sin(a) * d]);
+  const cloudRim: Sampler = () => {
+    const [x, y] = outline[(rand() * outline.length) | 0];
+    return tilt([x, CLOUD_BASE + y, r(-CLOUD_FRONT, CLOUD_FRONT)]);
+  };
+  const blade = (y0: number): Sampler => () => {
+    const { w, h, d } = BLADE;
+    const face = rand();
+    if (face < 0.45) return tilt([r(-w / 2, w / 2), y0 + r(-h / 2, h / 2), d / 2]); // front
+    if (face < 0.7) return tilt([r(-w / 2, w / 2), y0 + h / 2, r(-d / 2, d / 2)]); // top
+    if (face < 0.85) return tilt([rand() < 0.5 ? -w / 2 : w / 2, y0 + r(-h / 2, h / 2), r(-d / 2, d / 2)]); // sides
+    return tilt([r(-w / 2, w / 2), y0 - h / 2, r(-d / 2, d / 2)]); // bottom
   };
   return build([
-    ...DB_LEVELS.map((y) => [14, side(y)] as [number, Sampler]),
-    ...DB_LEVELS.flatMap((y) => [
-      [6, rim(y + h / 2)],
-      [6, rim(y - h / 2)],
-    ] as [number, Sampler][]),
-    [12, lid],
+    [26, cloudFace],
+    [14, cloudRim],
+    ...BLADES.map((y) => [24, blade(y)] as [number, Sampler]),
   ]);
 }
 
@@ -389,6 +410,8 @@ export function OrbMorph({ radius }: { radius: number }) {
     const w = [h * (1 - k0), h * k0 * (1 - k1), h * k1 * (1 - k2), h * k2];
     let settle = 0;
     forms.forEach((form, i) => {
+      // these are the rendered forms: point the connector line at their anchors
+      formAnchors[i] = form.anchor ?? null;
       const v = smooth(range(0.7, 0.97, w[i]));
       settle = Math.max(settle, v);
       setFormVisibility(form, v, frame.clock.elapsedTime);
