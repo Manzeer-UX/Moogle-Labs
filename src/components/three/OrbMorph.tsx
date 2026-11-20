@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { CAPS_BEATS, scene } from "@/lib/scene";
 import { lerp, range, smooth } from "@/lib/math";
 import { capsIn, capsSwing } from "./poses";
-import { buildShapeForms, setFormVisibility } from "./ShapeForms";
+import { DB_LEVELS, DB_TILT, buildShapeForms, setFormVisibility } from "./ShapeForms";
 
 /**
  * Particle swarm that lives on the orb's surface and, in the capabilities
@@ -148,22 +148,32 @@ function robotHead() {
 }
 
 function database() {
-  const R = 1.05;
-  const depth = 0.75; // ellipse depth of each disc
-  const levels = [1.0, 0.33, -0.33, -1.0];
-  const side: Sampler = () => {
+  // three stacked discs (matches ShapeForms), tilted so the top shows
+  const R = 1.0;
+  const h = 0.56;
+  const cos = Math.cos(DB_TILT);
+  const sin = Math.sin(DB_TILT);
+  const tilt = ([x, y, z]: Vec): Vec => [x, y * cos - z * sin, y * sin + z * cos];
+  const side = (y0: number): Sampler => () => {
     const a = rand() * Math.PI * 2;
-    return [Math.cos(a) * R, r(-1, 1), Math.sin(a) * depth];
+    return tilt([Math.cos(a) * R, y0 + r(-h / 2, h / 2), Math.sin(a) * R]);
+  };
+  const rim = (y: number): Sampler => () => {
+    const a = rand() * Math.PI * 2;
+    return tilt([Math.cos(a) * R * 0.97, y, Math.sin(a) * R * 0.97]);
   };
   const lid: Sampler = () => {
     const a = rand() * Math.PI * 2;
-    const d = Math.sqrt(rand()) * R;
-    return [Math.cos(a) * d, 1.0, Math.sin(a) * (d / R) * depth];
+    const d = Math.sqrt(rand()) * (R - 0.1);
+    return tilt([Math.cos(a) * d, DB_LEVELS[0] + h / 2, Math.sin(a) * d]);
   };
   return build([
-    ...levels.map((y) => [12, ring([0, y, 0], R, depth, "xz", 0.012)] as [number, Sampler]),
-    [14, side],
-    [10, lid],
+    ...DB_LEVELS.map((y) => [14, side(y)] as [number, Sampler]),
+    ...DB_LEVELS.flatMap((y) => [
+      [6, rim(y + h / 2)],
+      [6, rim(y - h / 2)],
+    ] as [number, Sampler][]),
+    [12, lid],
   ]);
 }
 

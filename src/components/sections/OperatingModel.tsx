@@ -10,11 +10,11 @@ import { Reveal, RevealText } from "@/components/ui/Reveal";
 
 /* Curve through the three stages, in a 1000×380 viewBox. */
 /* Points sit above each stage card; the cards hang just below them. */
-const CURVE = "M0,262 C40,236 70,212 110,198 C230,160 330,146 443,129 C560,110 660,80 776,61 C860,48 930,36 1000,28";
+const CURVE = "M0,215 C40,192 70,172 110,160 C230,128 330,116 443,103 C560,88 660,64 776,46 C860,36 930,27 1000,21";
 const POINTS = [
-  { x: 11, y: 52.1 },
-  { x: 44.3, y: 33.9 },
-  { x: 77.6, y: 16.1 },
+  { x: 11, y: 42.1 },
+  { x: 44.3, y: 27.1 },
+  { x: 77.6, y: 12.1 },
 ];
 const PIP = ["33%", "66%", "100%"];
 
@@ -84,11 +84,11 @@ export function OperatingModel() {
       />
       <div aria-hidden className="bg-dash-grid pointer-events-none absolute inset-0 opacity-20" />
 
-      <div className="relative mx-auto max-w-[1280px] px-4 py-16 tablet:px-8 laptop:py-20">
-        <div className="grid gap-10 laptop:grid-cols-12 laptop:items-end">
-          <div className="flex flex-col gap-6 laptop:col-span-7">
+      <div className="relative mx-auto max-w-[1280px] px-4 py-12 tablet:px-8 laptop:py-14">
+        <div className="grid gap-6 laptop:grid-cols-12 laptop:items-end">
+          <div className="flex flex-col gap-4 laptop:col-span-7">
             <Supertitle>{om.eyebrow}</Supertitle>
-            <Reveal as="h2" className="is-h2">
+            <Reveal as="h2" className="is-h2 laptop:text-[2.6rem]!">
               <span className="block overflow-hidden pb-[0.04em]">
                 <span data-reveal className="block text-balance">
                   {om.title.lead} {om.title.pre} <span className="text-lilac">{om.title.highlight}</span>
@@ -96,7 +96,7 @@ export function OperatingModel() {
               </span>
             </Reveal>
           </div>
-          <RevealText className="max-w-[520px] text-[14px] leading-relaxed text-white/80 laptop:col-span-5 laptop:justify-self-end">
+          <RevealText className="max-w-[520px] text-[13.5px] leading-relaxed text-white/80 laptop:col-span-5 laptop:justify-self-end">
             {om.body}
           </RevealText>
         </div>
@@ -104,18 +104,18 @@ export function OperatingModel() {
         {/* Desktop chart + foundations table */}
         <div
           data-chart
-          className="mt-10 hidden grid-cols-[180px_repeat(3,minmax(0,1fr))] tablet:grid laptop:grid-cols-[220px_repeat(3,minmax(0,1fr))]"
+          className="mt-6 hidden grid-cols-[180px_repeat(3,minmax(0,1fr))] tablet:grid laptop:grid-cols-[220px_repeat(3,minmax(0,1fr))]"
         >
           <div className="flex flex-col justify-between border-r border-dashed border-white/20 py-1 pr-6">
             <span className="font-heading text-[12px] font-semibold tracking-[0.18em] text-lilac uppercase">
               {om.axis} ↑
             </span>
-            <span className="pb-4 font-heading text-[12px] font-semibold tracking-[0.18em] text-white/55 uppercase">
+            <span className="pb-2 font-heading text-[12px] font-semibold tracking-[0.18em] text-white/55 uppercase">
               {om.foundationsLabel} ↓
             </span>
           </div>
 
-          <div className="relative col-span-3 h-[320px] laptop:h-[340px]">
+          <div className="relative col-span-3 h-[250px] laptop:h-[260px]">
             <div aria-hidden className="absolute inset-y-0 left-1/3 border-l border-dashed border-white/10" />
             <div aria-hidden className="absolute inset-y-0 left-2/3 border-l border-dashed border-white/10" />
             <svg viewBox="0 0 1000 380" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" aria-hidden>
@@ -165,20 +165,20 @@ export function OperatingModel() {
               <article
                 key={stage.n}
                 data-stage-card
-                className={`chamfer absolute w-[31%] p-5 backdrop-blur-md [--cut:12px] ${
+                className={`chamfer absolute w-[31%] px-4 py-3.5 backdrop-blur-md [--cut:10px] ${
                   i === 2
                     ? "bg-gradient-to-br from-brand/60 to-brand-deep/40 shadow-[0_0_48px_rgba(121,93,245,0.45)] ring-1 ring-lilac/50"
                     : "bg-white/[0.07] ring-1 ring-white/10"
                 }`}
-                style={{ left: `${i * 33.333 + 1}%`, top: `calc(${POINTS[i].y}% + 20px)` }}
+                style={{ left: `${i * 33.333 + 1}%`, top: `calc(${POINTS[i].y}% + 16px)` }}
               >
                 <span className="font-heading text-[11px] font-semibold tracking-[0.2em] text-lilac uppercase">
                   Stage {stage.n}
                 </span>
-                <h3 className="mt-2 font-heading text-[17px] leading-tight font-semibold uppercase laptop:text-[19px]">
+                <h3 className="mt-1 font-heading text-[15px] leading-tight font-semibold uppercase laptop:text-[16px]">
                   {stage.title}
                 </h3>
-                <p className="mt-2 text-[12.5px] leading-relaxed text-white/75">{stage.body}</p>
+                <p className="mt-1 text-[12px] leading-snug text-white/75">{stage.body}</p>
               </article>
             ))}
           </div>
@@ -187,7 +187,7 @@ export function OperatingModel() {
             <div key={row.label} data-om-row className="contents">
               <div
                 data-om-cell
-                className="flex items-center gap-3 border-t border-white/10 py-3.5 pr-4 font-heading text-[12.5px] font-semibold uppercase laptop:text-[13px]"
+                className="flex items-center gap-3 border-t border-white/10 py-2.5 pr-4 font-heading text-[12.5px] font-semibold uppercase laptop:text-[13px]"
               >
                 <BlinkSquare className="border-lilac" dot="bg-lilac" />
                 {row.label}
@@ -196,7 +196,7 @@ export function OperatingModel() {
                 <div
                   key={cell}
                   data-om-cell
-                  className="flex min-w-0 items-center gap-3 border-t border-white/10 px-5 py-3.5 text-[13px] text-white/80"
+                  className="flex min-w-0 items-center gap-3 border-t border-white/10 px-5 py-2.5 text-[12.5px] text-white/80"
                 >
                   <span className="relative block h-[3px] w-8 shrink-0 bg-white/15">
                     <span data-om-bar className="absolute inset-y-0 left-0 block origin-left bg-lilac" style={{ width: PIP[c] }} />
@@ -234,7 +234,7 @@ export function OperatingModel() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-6 border-t border-white/15 pt-8 tablet:flex-row tablet:items-center">
+        <div className="mt-6 flex flex-col items-start justify-between gap-4 border-t border-white/15 pt-5 tablet:flex-row tablet:items-center">
           <p className="flex items-center gap-3 text-[13px] text-white/80">
             <span className="relative flex size-2.5">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />

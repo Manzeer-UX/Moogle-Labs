@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { LuArrowUp } from "react-icons/lu";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { finalCta, footer, site } from "@/content/site";
@@ -13,6 +13,27 @@ const WORD = "MOOGLELABS";
 
 export function Footer() {
   const ref = useRef<HTMLElement>(null);
+  const wordRef = useRef<HTMLParagraphElement>(null);
+
+  // Size the wordmark to fill the width exactly, whatever the font (Home 1
+  // and Home 2 use different typefaces), and refit on resize / font load.
+  useEffect(() => {
+    const word = wordRef.current;
+    const box = word?.parentElement;
+    if (!word || !box) return;
+    const fit = () => {
+      const styles = getComputedStyle(box);
+      const available = box.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
+      word.style.fontSize = "100px";
+      const natural = word.scrollWidth;
+      if (natural > 0) word.style.fontSize = `${(100 * available) / natural}px`;
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    const ro = new ResizeObserver(fit);
+    ro.observe(box);
+    return () => ro.disconnect();
+  }, []);
 
   useGSAP(
     () => {
@@ -40,8 +61,9 @@ export function Footer() {
     <footer ref={ref} data-header="light" className="relative z-10 overflow-hidden bg-light-grey text-ink">
       <div className="flex flex-col items-center px-4 pt-6 tablet:px-8">
         <p
+          ref={wordRef}
           aria-hidden
-          className="-mb-[2.6vw] flex overflow-hidden font-heading text-[15.4vw] leading-[0.8] font-semibold uppercase select-none"
+          className="-mb-[0.24em] flex w-max overflow-hidden pt-[0.04em] font-heading text-[14vw] leading-[0.9] font-semibold whitespace-nowrap uppercase select-none"
         >
           {WORD.split("").map((ch, i) => (
             <span key={i} data-letter className="block">
@@ -56,7 +78,7 @@ export function Footer() {
         >
           <div className="grid gap-12 tablet:grid-cols-12">
             <div data-foot className="flex flex-col gap-6 tablet:col-span-5">
-              <Logo className="h-9 w-auto text-ink [--logo-accent:var(--color-brand)]" />
+              <Logo className="h-9 w-auto self-start text-ink [--logo-accent:var(--color-brand)]" />
               <p className="max-w-[380px] text-[13px] leading-relaxed text-ink/75">{footer.statement}</p>
             </div>
 
