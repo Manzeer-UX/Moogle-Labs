@@ -166,6 +166,8 @@ type Def = {
   accents?: THREE.BufferGeometry[];
   /** Dark glossy glass panels (e.g. the robot's face screen). */
   screens?: THREE.BufferGeometry[];
+  /** Light lilac glossy solids (e.g. the cloud), for contrast with the violet. */
+  pales?: THREE.BufferGeometry[];
   paths: { pts: P[]; closed?: boolean; bright?: boolean }[]; bodies: THREE.BufferGeometry[] };
 
 function robotDef(): Def {
@@ -225,84 +227,191 @@ function robotDef(): Def {
   };
 }
 
-/** Rounded puck profile for LatheGeometry (one database disc). */
-function puck(R: number, h: number, r: number) {
-  const pts: THREE.Vector2[] = [new THREE.Vector2(0, h / 2)];
-  for (let i = 0; i <= 8; i++) {
-    const a = (i / 8) * (Math.PI / 2);
-    pts.push(new THREE.Vector2(R - r + Math.sin(a) * r, h / 2 - r + Math.cos(a) * r));
+/* Data & cloud: a clean cloud badge (with an upload arrow) above a two-unit
+   server rack. Shared with the particle sampler in OrbMorph. */
+export const DATA_TILT = 0.26;
+/** Cloud silhouette circles: [cx, cy, r] (flat base at cy - r of the side bumps). */
+const CLOUD_BUMPS: [number, number, number][] = [
+  [-0.62, 0.42, 0.42],
+  [0.02, 0.66, 0.6],
+  [0.72, 0.42, 0.42],
+];
+export const CLOUD_BASE = 0.5; // y of the cloud's flat base
+export const CLOUD_FRONT = 0.3; // z of the cloud's front face (depth 0.36 + bevel)
+export const BLADES = [-0.18, -0.82]; // server unit centres (y)
+export const BLADE = { w: 2.3, h: 0.54, d: 1.05 };
+
+/** Closed cloud outline in the xy plane (base at y = 0 before offset). */
+export function cloudOutline(): [number, number][] {
+  const [L, , R] = CLOUD_BUMPS;
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 12; i++) {
+    const a = -Math.PI / 2 - (i / 12) * (Math.PI / 2); // bottom → leftmost of left bump
+    pts.push([L[0] + Math.cos(a) * L[2], L[1] + Math.sin(a) * L[2]]);
   }
-  for (let i = 0; i <= 8; i++) {
-    const a = (i / 8) * (Math.PI / 2);
-    pts.push(new THREE.Vector2(R - r + Math.cos(a) * r, -h / 2 + r - Math.sin(a) * r));
+  const x0 = L[0] - L[2];
+  const x1 = R[0] + R[2];
+  for (let i = 1; i < 80; i++) {
+    const x = x0 + ((x1 - x0) * i) / 80;
+    let y = 0;
+    for (const [cx, cy, r] of CLOUD_BUMPS) {
+      const dx = x - cx;
+      if (Math.abs(dx) <= r) y = Math.max(y, cy + Math.sqrt(r * r - dx * dx));
+    }
+    pts.push([x, y]);
   }
-  pts.push(new THREE.Vector2(0, -h / 2));
+  for (let i = 0; i <= 12; i++) {
+    const a = -(i / 12) * (Math.PI / 2); // rightmost → bottom of right bump
+    pts.push([R[0] + Math.cos(a) * R[2], R[1] + Math.sin(a) * R[2]]);
+  }
   return pts;
 }
 
-export const DB_TILT = 0.42;
-export const DB_LEVELS = [0.72, 0, -0.72];
-
 function databaseDef(): Def {
-  const R = 1.0;
-  const h = 0.56;
-  // three stacked discs with small gaps: the classic database icon, in 3D
-  const bodies = DB_LEVELS.map((y) => new THREE.LatheGeometry(puck(R, h, 0.12), 72).translate(0, y, 0));
+  // cloud: one clean silhouette, bevelled into a solid badge
+  const outline = cloudOutline();
+  const shape = new THREE.Shape();
+  shape.moveTo(outline[0][0], outline[0][1]);
+  outline.slice(1).forEach(([x, y]) => shape.lineTo(x, y));
+  const cloud = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.36,
+    bevelEnabled: true,
+    bevelThickness: 0.12,
+    bevelSize: 0.1,
+    bevelSegments: 8,
+    curveSegments: 24,
+  });
+  cloud.translate(0, CLOUD_BASE, -0.18);
+  const cf = CLOUD_FRONT;
+  // dark glass screen set into the cloud's face (a smaller copy of the outline)
+  const sx = 0.05;
+  const sy = 0.55;
+  const k = 0.74;
+  const inner = new THREE.Shape();
+  const innerPts = outline.map(([x, y]) => [sx + (x - sx) * k, sy + (y - sy) * k] as [number, number]);
+  inner.moveTo(innerPts[0][0], innerPts[0][1]);
+  innerPts.slice(1).forEach(([x, y]) => inner.lineTo(x, y));
+  const cloudScreen = new THREE.ExtrudeGeometry(inner, {
+    depth: 0.03,
+    bevelEnabled: true,
+    bevelThickness: 0.02,
+    bevelSize: 0.02,
+    bevelSegments: 3,
+    curveSegments: 24,
+  });
+  cloudScreen.translate(0, CLOUD_BASE, cf - 0.005);
+  // glowing upload arrow on the cloud's face
+  const arrowPts = (a: [number, number], b: [number, number]) =>
+    new THREE.TubeGeometry(
+      new THREE.LineCurve3(new THREE.Vector3(a[0], a[1], cf + 0.09), new THREE.Vector3(b[0], b[1], cf + 0.09)),
+      4,
+      0.055,
+      14,
+      false,
+    );
+  const ay = CLOUD_BASE;
+  const arrow = [
+    arrowPts([0, ay + 0.18], [0, ay + 0.78]),
+    arrowPts([0, ay + 0.8], [-0.22, ay + 0.58]),
+    arrowPts([0, ay + 0.8], [0.22, ay + 0.58]),
+    ...[[0, ay + 0.18], [0, ay + 0.8], [-0.22, ay + 0.58], [0.22, ay + 0.58]].map(([x, y]) =>
+      new THREE.SphereGeometry(0.055, 14, 10).translate(x, y, cf + 0.09),
+    ),
+  ];
+
+  // servers: larger units with clear, bright details
+  const blades = BLADES.map((y) => new RoundedBoxGeometry(BLADE.w, BLADE.h, BLADE.d, 4, 0.12).translate(0, y, 0));
+  const front = BLADE.d / 2;
+  const panels = BLADES.map((y) => new RoundedBoxGeometry(2.0, 0.34, 0.05, 3, 0.07).translate(0, y, front + 0.005));
+  const leds = BLADES.flatMap((y) =>
+    [0.52, 0.7, 0.88].map((x) => new THREE.SphereGeometry(0.065, 18, 12).translate(x, y, front + 0.06)),
+  );
+  const slots = BLADES.flatMap((y) =>
+    [-0.82, -0.56, -0.3, -0.04].map((x) => new RoundedBoxGeometry(0.18, 0.08, 0.04, 2, 0.025).translate(x, y, front + 0.045)),
+  );
+  // data links from the rack up into the cloud
+  const top = BLADES[0] + BLADE.h / 2;
+  const links = [-0.62, 0.62].map(
+    (x) =>
+      new THREE.TubeGeometry(
+        new THREE.LineCurve3(new THREE.Vector3(x, top, 0.05), new THREE.Vector3(x, CLOUD_BASE + 0.06, 0.05)),
+        6,
+        0.045,
+        12,
+        false,
+      ),
+  );
   return {
-    scale: 1.15,
+    scale: 1.2,
     vivid: true,
     glossy: true,
-    tilt: DB_TILT,
-    bodies,
+    tilt: DATA_TILT,
+    bodies: [...blades, cloud],
+    screens: [...panels, cloudScreen],
+    accents: [...leds, ...slots, ...links, ...arrow],
     paths: [
-      // glowing rim on the top face + light rings in the gaps between discs
-      { pts: circle([0, DB_LEVELS[0] + h / 2 + 0.012, 0], R - 0.14, "xz"), closed: true, bright: true },
-      { pts: circle([0, (DB_LEVELS[0] + DB_LEVELS[1]) / 2, 0], R * 0.97, "xz"), closed: true, bright: true },
-      { pts: circle([0, (DB_LEVELS[1] + DB_LEVELS[2]) / 2, 0], R * 0.97, "xz"), closed: true, bright: true },
-      { pts: circle([0, DB_LEVELS[2] - h / 2 - 0.01, 0], R - 0.14, "xz"), closed: true },
+      // glowing rim on the cloud's face and on each server front
+      { pts: innerPts.map(([x, y]) => [x, CLOUD_BASE + y, cf + 0.06] as P), closed: true, bright: true },
+      ...BLADES.map((y) => ({ pts: roundedRect(2.08, 0.42, 0.1, front + 0.035, y), closed: true, bright: true })),
+      ...[-0.62, 0.62].map((x) => ({ pts: [[x, top, 0.11], [x, CLOUD_BASE + 0.06, 0.11]] as P[], bright: true })),
     ],
   };
 }
 
 function shieldDef(): Def {
   const outline = shieldOutline();
-  const shape = new THREE.Shape();
-  shape.moveTo(outline[0][0], outline[0][1]);
-  outline.slice(1).forEach(([x, y]) => shape.lineTo(x, y));
-  // bevelled, rounded-edge slab so it catches light like a real badge
-  const depth = 0.2;
-  const bevel = 0.1;
-  const body = new THREE.ExtrudeGeometry(shape, {
+  const toShape = (pts: [number, number][]) => {
+    const sh = new THREE.Shape();
+    sh.moveTo(pts[0][0], pts[0][1]);
+    pts.slice(1).forEach(([x, y]) => sh.lineTo(x, y));
+    return sh;
+  };
+  // thick, bevelled glossy body (same violet as the robot head)
+  const depth = 0.34;
+  const bevel = 0.13;
+  const body = new THREE.ExtrudeGeometry(toShape(outline.map(([x, y]) => [x, y])), {
     depth,
     bevelEnabled: true,
     bevelThickness: bevel,
-    bevelSize: 0.08,
+    bevelSize: 0.1,
     bevelSegments: 8,
     curveSegments: 24,
   });
   body.translate(0, 0, -depth / 2);
-  const front = depth / 2 + bevel; // z of the front face
-  // raised check mark: a thick glossy tube standing proud of the face
+  const front = depth / 2 + bevel;
+  // dark glass screen set into the face: a smaller copy of the shield outline
+  const cx = 0;
+  const cy = -0.1;
+  const k = 0.74;
+  const innerPts = outline.map(([x, y]) => [cx + (x - cx) * k, cy + (y - cy) * k] as [number, number]);
+  const screen = new THREE.ExtrudeGeometry(toShape(innerPts), {
+    depth: 0.03,
+    bevelEnabled: true,
+    bevelThickness: 0.02,
+    bevelSize: 0.02,
+    bevelSegments: 3,
+  });
+  screen.translate(0, 0, front - 0.005);
+  const sf = front + 0.05; // screen face
+  // raised glowing check mark on the glass
   const checkCurve = new THREE.CatmullRomCurve3(
-    [new THREE.Vector3(-0.52, -0.02, front + 0.08), new THREE.Vector3(-0.12, -0.46, front + 0.08), new THREE.Vector3(0.58, 0.4, front + 0.08)],
+    [new THREE.Vector3(-0.42, -0.06, sf + 0.06), new THREE.Vector3(-0.1, -0.4, sf + 0.06), new THREE.Vector3(0.46, 0.3, sf + 0.06)],
     false,
     "catmullrom",
     0,
   );
-  const check = new THREE.TubeGeometry(checkCurve, 64, 0.085, 20, false);
-  const capA = new THREE.SphereGeometry(0.085, 20, 14).translate(-0.52, -0.02, front + 0.08);
-  const capB = new THREE.SphereGeometry(0.085, 20, 14).translate(0.58, 0.4, front + 0.08);
+  const check = new THREE.TubeGeometry(checkCurve, 64, 0.08, 20, false);
+  const capA = new THREE.SphereGeometry(0.08, 20, 14).translate(-0.42, -0.06, sf + 0.06);
+  const capB = new THREE.SphereGeometry(0.08, 20, 14).translate(0.46, 0.3, sf + 0.06);
   return {
     scale: 1.15,
     vivid: true,
     glossy: true,
-    tilt: 0.14,
+    tilt: 0.2,
     bodies: [body],
+    screens: [screen],
     accents: [check, capA, capB],
-    paths: [
-      { pts: outline.map(([x, y]) => [x * 0.95, y * 0.96 + 0.01, front + 0.012] as P), closed: true, bright: true },
-      { pts: outline.map(([x, y]) => [x * 0.76, y * 0.8 + 0.1, front + 0.012] as P), closed: true },
-    ],
+    paths: [{ pts: innerPts.map(([x, y]) => [x, y, sf + 0.008] as P), closed: true, bright: true }],
   };
 }
 
@@ -353,10 +462,13 @@ function networkDef(): Def {
 
 export type ShapeForm = {
   group: THREE.Group;
+  /** Connector-line attachment point (child of group). */
+  anchor?: THREE.Object3D;
   glass: THREE.ShaderMaterial;
   solid?: THREE.MeshPhysicalMaterial;
   accent?: THREE.MeshPhysicalMaterial;
   screen?: THREE.MeshPhysicalMaterial;
+  pale?: THREE.MeshPhysicalMaterial;
   strands: THREE.ShaderMaterial[];
 };
 
@@ -374,16 +486,20 @@ function buildForm(def: Def, seed: number): ShapeForm {
   // real highlights and shading instead of a flat glow.
   const solid = def.glossy
     ? new THREE.MeshPhysicalMaterial({
-        color: "#6b4cf2",
-        emissive: "#2b1694",
-        emissiveIntensity: 0.35,
-        roughness: 0.2,
-        metalness: 0.25,
+        // deeper base + little self-glow so the scene lights create real
+        // light-to-shadow shading (reads as 3D even on the light background)
+        color: "#5536e0",
+        emissive: "#1c0d66",
+        emissiveIntensity: 0.12,
+        roughness: 0.3,
+        metalness: 0.35,
         clearcoat: 1,
-        clearcoatRoughness: 0.06,
-        sheen: 0.6,
+        clearcoatRoughness: 0.05,
+        sheen: 0.35,
         sheenColor: new THREE.Color("#bcaeff"),
+        envMapIntensity: 1.3,
         transparent: true,
+        depthWrite: true,
         opacity: 0,
       })
     : undefined;
@@ -418,6 +534,25 @@ function buildForm(def: Def, seed: number): ShapeForm {
         opacity: 0,
       })
     : undefined;
+  const pale = def.pales
+    ? new THREE.MeshPhysicalMaterial({
+        color: "#b4a2ff",
+        emissive: "#6b4cf2",
+        emissiveIntensity: 0.14,
+        roughness: 0.22,
+        metalness: 0.15,
+        clearcoat: 1,
+        clearcoatRoughness: 0.04,
+        transparent: true,
+        depthWrite: true,
+        opacity: 0,
+      })
+    : undefined;
+  def.pales?.forEach((g) => {
+    const m = new THREE.Mesh(g, pale);
+    m.renderOrder = 1;
+    group.add(m);
+  });
   def.screens?.forEach((g) => {
     const m = new THREE.Mesh(g, screen);
     m.renderOrder = 2;
@@ -446,11 +581,36 @@ function buildForm(def: Def, seed: number): ShapeForm {
     strands.push(mat, glow);
   });
   group.visible = false;
-  return { group, glass, solid, accent, screen, strands };
+  return { group, glass, solid, accent, screen, pale, strands };
 }
 
+/**
+ * Where each category's connector line attaches, in form space: a point on
+ * the side of the shape that faces its panel (panels alternate right/left).
+ */
+const ANCHORS: P[] = [
+  [1.46, -0.05, 0], // robot: right ear (panel on the right)
+  [-1.12, 0.92, 0.1], // data: left edge of the cloud (panel on the left)
+  [1.3, 1.08, 0.12], // shield: upper-right edge (panel on the right)
+  [-1.37, 0.85, -0.2], // network: left face of the top-left node (panel on the left)
+];
+
+/**
+ * Live anchor objects for the connector line. Registered every frame by the
+ * forms that are actually rendered (OrbMorph), so a second build (e.g. React
+ * Strict Mode) can never leave the line pointing at a detached copy.
+ */
+export const formAnchors: (THREE.Object3D | null)[] = [null, null, null, null];
+
 export function buildShapeForms(): ShapeForm[] {
-  return [robotDef(), databaseDef(), shieldDef(), networkDef()].map(buildForm);
+  return [robotDef(), databaseDef(), shieldDef(), networkDef()].map((def, i) => {
+    const form = buildForm(def, i);
+    const anchor = new THREE.Object3D();
+    anchor.position.set(...ANCHORS[i]);
+    form.group.add(anchor);
+    form.anchor = anchor;
+    return form;
+  });
 }
 
 /** Show a form at visibility v (0..1): glass fades in, strands draw on. */
@@ -460,13 +620,15 @@ export function setFormVisibility(form: ShapeForm, v: number, t: number) {
   form.glass.uniforms.uVis.value = v;
   form.glass.uniforms.uTime.value = t;
   // lit solids: fade in, then turn opaque so they shade and occlude properly
-  for (const m of [form.solid, form.accent, form.screen]) {
+  for (const m of [form.solid, form.accent, form.screen, form.pale]) {
     if (!m) continue;
-    m.opacity = v;
-    const transparent = v < 0.999;
+    m.opacity = Math.min(1, v * 1.15);
+    // opaque well before the shape fully settles; depth is always written so
+    // back faces never show through the front (no see-through look)
+    const transparent = v < 0.85;
+    m.depthWrite = true;
     if (m.transparent !== transparent) {
       m.transparent = transparent;
-      m.depthWrite = !transparent;
       m.needsUpdate = true;
     }
   }

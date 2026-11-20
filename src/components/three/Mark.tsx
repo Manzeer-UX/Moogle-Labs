@@ -17,6 +17,7 @@ import {
   whyProgress,
 } from "./poses";
 import { ORB_NODES, ORB_RADIUS, OrbBody } from "./Orb";
+import { formAnchors } from "./ShapeForms";
 
 export type MarkVariant = "logo" | "orb";
 
@@ -275,7 +276,9 @@ export function Mark({ variant = "logo" }: { variant?: MarkVariant }) {
         }
       });
       const panel = best >= 0 ? connector.panels[best] : null;
-      const node = best >= 0 ? nodeRefs.current[best] : null;
+      // Orb variant: attach to the category's 3D shape (a point on its edge
+      // facing the panel); the logo variant keeps its node balls.
+      const node = best >= 0 ? (orb ? formAnchors[best] ?? nodeRefs.current[best] : nodeRefs.current[best]) : null;
       if (sg !== "A" || mobile || best < 0 || bestV < 0.03 || !panel || !node || !g.visible) {
         line.style.opacity = "0";
         dot.style.opacity = "0";
@@ -289,7 +292,9 @@ export function Mark({ variant = "logo" }: { variant?: MarkVariant }) {
         const panelOnRight = r.left + r.width / 2 > x;
         const ex = panelOnRight ? r.left - 14 : r.right + 14;
         const elbow = panelOnRight ? ex - 70 : ex + 70;
-        const ey = r.top + 34;
+        // meet the panel level with the anchor (kept inside the panel edge) so
+        // the line runs nearly straight across instead of climbing to a corner
+        const ey = Math.min(Math.max(y, r.top + 34), r.bottom - 34);
         line.setAttribute(
           "points",
           `${x.toFixed(1)},${y.toFixed(1)} ${elbow.toFixed(1)},${ey.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`,

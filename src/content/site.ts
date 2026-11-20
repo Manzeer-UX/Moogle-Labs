@@ -36,14 +36,14 @@ export const hero = {
   primaryCta: { label: "Discuss Your AI Roadmap", href: "#next-steps" },
   secondaryCta: { label: "Explore Solutions", href: "#services" },
   friction: {
-    question: "Where is your AI roadmap stuck?",
+    question: "Where is your AI roadmap encountering friction?",
     hint: "Pick one to start",
     options: [
-      { label: "We don’t know where to start with AI.", href: "#stage-01" },
-      { label: "Our AI pilots never reach production.", href: "#faq-1" },
-      { label: "Our data is complex, unstructured and growing.", href: "#cap-2" },
-      { label: "We need AI that’s secure, compliant and controllable.", href: "#cap-3" },
-      { label: "AI costs are rising, but the value isn’t clear.", href: "#faq-5" },
+      { label: "We know AI can help, but where should we start?", href: "#stage-01" },
+      { label: "Our AI pilots aren’t reaching production.", href: "#faq-1" },
+      { label: "How can we make sense of complex, unstructured, and growing data?", href: "#cap-2" },
+      { label: "How do we make AI secure, compliant and controllable?", href: "#cap-3" },
+      { label: "Our AI costs are growing, but the value isn’t clear.", href: "#faq-5" },
     ],
   },
 };
@@ -69,27 +69,27 @@ export const capabilities = {
       label: "Category 1",
       title: "Build & Scale AI",
       icon: "cpu",
-      intro: "Turn lab experiments into resilient, revenue-generating enterprise software.",
+      intro: "Transform models from lab experiments into resilient, revenue-generating enterprise software with our AI/ML services.",
       services: [
         {
           icon: "rocket" as ServiceIcon,
           title: "AI Implementation Services",
-          body: "Production-grade ML models in live environments, with hardened security, low latency and measurable ROI.",
+          body: "Deploy production-grade machine learning models into live environments with hardened security, minimal latency, and measurable business ROI.",
         },
         {
           icon: "brain" as ServiceIcon,
           title: "Enterprise Intelligence",
-          body: "Predictive analytics and custom LLMs across your workflows, for faster decisions and automated problem-solving.",
+          body: "Unify predictive analytics and custom LLMs across operational workflows to accelerate executive decision-making and automate complex problem-solving.",
         },
         {
           icon: "bot" as ServiceIcon,
           title: "Agentic Operations",
-          body: "Autonomous agents that run multi-step business logic across your enterprise software, reliably.",
+          body: "Deploy autonomous AI agents that orchestrate multi-step business logic, interact with enterprise software, and execute complex workflows reliably.",
         },
         {
           icon: "workflow" as ServiceIcon,
           title: "Workflow Automation",
-          body: "Remove manual bottlenecks with intelligent agents across legacy systems, ERPs and cloud apps.",
+          body: "Eliminate manual bottlenecks with enterprise workflow automation that integrates intelligent agents across legacy architectures, enterprise ERPs, and modern cloud applications.",
         },
       ],
     },
@@ -98,17 +98,17 @@ export const capabilities = {
       label: "Category 2",
       title: "Data Engineering & Cloud Infrastructure",
       icon: "server",
-      intro: "High-throughput, governed data pipelines on resilient cloud architecture.",
+      intro: "Build the high-throughput, governed pipelines through specialized data engineering services and resilient cloud architectures.",
       services: [
         {
           icon: "database" as ServiceIcon,
           title: "AI-Ready Data Foundation",
-          body: "Siloed data turned into clean, vector-indexed pipelines, ready for accurate training and retrieval.",
+          body: "Consolidate siloed enterprise data into structured, clean, and vector-indexed pipelines ready for high-accuracy model training and retrieval.",
         },
         {
           icon: "cloud" as ServiceIcon,
           title: "AI Cloud & Reliability",
-          body: "AI cloud engineering, continuous MLOps and guardrails for zero-downtime model serving at scale.",
+          body: "Combine AI cloud engineering, continuous MLOps pipelines, and infrastructure guardrails for zero-downtime model serving at scale.",
         },
       ],
     },
@@ -117,22 +117,22 @@ export const capabilities = {
       label: "Category 3",
       title: "Trust, Quality & Verification",
       icon: "lock",
-      intro: "De-risk deployment with compliance, model security and quality assurance.",
+      intro: "De-risk deployment through comprehensive compliance, model security, and quality assurance.",
       services: [
         {
           icon: "shield" as ServiceIcon,
           title: "AI Security & Governance",
-          body: "Protect your IP, eliminate hallucinations and enforce compliance with continuous monitoring and guardrails.",
+          body: "Protect proprietary intellectual property, eliminate hallucinations, and enforce strict regulatory compliance through continuous model monitoring and guardrails.",
         },
         {
           icon: "flask" as ServiceIcon,
           title: "AI Testing",
-          body: "Stress-test accuracy, safety and edge cases before launch to prevent hallucination, drift and runtime failures.",
+          body: "Stress-test model accuracy, safety limits, and edge-case behavior before launch to prevent hallucination, drift, and unexpected runtime failures.",
         },
         {
           icon: "badge" as ServiceIcon,
           title: "AI Quality Engineering",
-          body: "Faster release cycles with AI-driven test automation, test design and continuous regression analysis.",
+          body: "Accelerate traditional software release cycles using AI-driven automated testing, intelligent test design, and continuous regression analysis.",
         },
       ],
     },
@@ -141,12 +141,12 @@ export const capabilities = {
       label: "Category 4",
       title: "Decentralized Architecture",
       icon: "network",
-      intro: "Tamper-proof provenance, data sovereignty and distributed execution.",
+      intro: "Ensure tamper-proof provenance, data sovereignty, and distributed execution.",
       services: [
         {
           icon: "blocks" as ServiceIcon,
           title: "Web3 & Decentralized AI",
-          body: "Distributed ledgers plus AI for cryptographic data provenance, secure compute sharing and verifiable model execution.",
+          body: "Combine distributed ledgers with artificial intelligence to ensure cryptographic data provenance, secure compute sharing, and verifiable model execution.",
         },
       ],
     },
@@ -155,7 +155,7 @@ export const capabilities = {
 
 export const industries = {
   eyebrow: "Industries We Serve",
-  title: { lead: "Intelligence tailored", tail: "to how your sector works." },
+  title: { lead: "Intelligence tailored", tail: "to how your sector actually operates." },
   items: [
     { name: "Healthcare", icon: "health" },
     { name: "Logistics & Supply Chain", icon: "logistics" },
@@ -171,8 +171,8 @@ export const industries = {
 
 export const enterprise = {
   eyebrow: "End-to-End Enterprise Delivery",
-  title: { lead: "One team", tail: "for the full AI lifecycle." },
-  body: "Every layer of the stack, backed by our own platform and product suite.",
+  title: { lead: "One unified team", tail: "across the full enterprise AI lifecycle." },
+  body: "One team across the whole AI stack, backed by our own platform and product suite.",
   disciplines: ["AI", "Data", "Engineering", "Cloud", "Security", "Governance", "Automation"],
 };
 
@@ -183,105 +183,112 @@ export const delivery = {
     {
       n: "01",
       name: "Discover",
+      duration: "1–2 weeks",
       focus: "Commercial Feasibility & Technical Scoping",
-      execution: "We audit data readiness, legacy constraints and bottlenecks to find viable, high-ROI use cases.",
+      execution: "We audit data readiness, legacy architecture constraints, and operational bottlenecks to define technically viable, high-ROI target applications.",
       outcome: "Identify the right problems",
       solves: ["Enterprise AI Strategy & Opportunity Mapping"],
     },
     {
       n: "02",
       name: "Strategize",
-      focus: "Use-Case Prioritization & Roadmapping",
-      execution: "We weigh technical dependencies against business urgency to set milestones, resources and risk thresholds.",
+      duration: "1–2 weeks",
+      focus: "Use-Case Prioritization & Commercial Roadmapping",
+      execution: "We map technical dependencies against business urgency, defining delivery milestones, infrastructure resource requirements, and risk thresholds.",
       outcome: "A clear transformation plan",
       solves: ["Enterprise AI Strategy", "AI Value & Cost Optimization"],
     },
     {
       n: "03",
       name: "Architect",
-      focus: "Platform, Vector & Infrastructure Design",
-      execution: "We design data pipelines, model integration layers, vector storage and zero-trust security.",
+      duration: "2–3 weeks",
+      focus: "Platform, Vector, & Infrastructure Design",
+      execution: "We design production data pipelines, foundation model integration layers, vector storage, and zero-trust security postures.",
       outcome: "An implementation blueprint",
       solves: ["AI-Ready Data Foundation", "AI PoC-to-Production"],
     },
     {
       n: "04",
       name: "Build",
-      focus: "Full-Stack AI/ML & Data Pipeline Engineering",
-      execution: "We build data ingestion, train or fine-tune task models, add RAG pipelines and deploy workflow agents.",
+      duration: "4–8 weeks",
+      focus: "Full-Stack AI/ML development & Data Pipeline Engineering",
+      execution: "We develop clean data ingestion flows, train or fine-tune task-specific models, build retrieval pipelines (RAG), and deploy autonomous workflow agents.",
       outcome: "A production-grade solution",
       solves: ["AI-Ready Data Foundation", "AI PoC-to-Production"],
     },
     {
       n: "05",
       name: "Deploy",
-      focus: "Cloud, MLOps & System Integration",
-      execution: "We automate CI/CD/CT, containerized model serving, fallback routing and latency monitoring.",
+      duration: "1–2 weeks",
+      focus: "Cloud, DevOps, MLOps, Orchestration, & System Integration",
+      execution: "We automate continuous delivery pipelines (CI/CD/CT), containerized model serving, fallback routing, and latency-budget monitoring.",
       outcome: "Complete deployment",
       solves: ["AI PoC-to-Production Integration"],
     },
     {
       n: "06",
       name: "Govern",
-      focus: "Model Safety, Guardrails & Auditability",
-      execution: "We run continuous red-teaming, prompt-injection defenses, drift monitoring and compliance logging.",
+      duration: "Continuous",
+      focus: "Model Safety, Guardrails, & Auditability",
+      execution: "We implement continuous red-teaming, automated prompt-injection defenses, drift monitoring, and compliance logging across the full stack.",
       outcome: "Secure and compliant operations",
       solves: ["AI Security & Enterprise Governance"],
     },
     {
       n: "07",
       name: "Scale",
-      focus: "Compute Optimization, FinOps & Continuous Learning",
-      execution: "We quantize models, add caching, tune inference and support multi-tenant infrastructure.",
+      duration: "Ongoing",
+      focus: "Compute Optimization, FinOps, & Continuous Learning",
+      execution: "We run model quantization, caching strategies, active inference tuning, and sustained multi-tenant infrastructure support.",
       outcome: "Sustainable enterprise adoption",
       solves: ["AI Value Optimization", "AI Implementation"],
     },
   ],
   governance: {
     title: "Governed end to end.",
-    body: "Security, data and AI governance checks at every stage, not just the end.",
+    body: "Security, data and AI governance checks run at every stage, not just at the end.",
   },
 };
 
 export const why = {
   eyebrow: "Why MoogleLabs",
-  title: { lead: "Not headcount. Not prototypes.", tail: "Operational capability." },
-  body: "End-to-end ownership, from business problem to secure, governed, scalable AI.",
+  title: { lead: "We do not sell headcount or prototypes.", tail: "We deliver operational capability." },
+  body: "An end-to-end transformation partner, taking ownership from the business problem to a secure, governed, and scalable AI/ML solutions.",
   items: [
     {
       icon: "target",
       title: "Business problem first, technology second",
-      body: "We start from the outcome you need, then engineer the stack to deliver it.",
+      body: "We start with the commercial outcome you need, then engineer the stack that achieves it.",
       differentiator: "Outcome-led, not technology-led",
     },
     {
       icon: "route",
       title: "PoC-to-production ownership",
-      body: "We take prototypes all the way to dependable, mission-critical systems.",
+      body: "We bridge the gap between experimental prototypes and dependable, mission-critical systems.",
       differentiator: "We stay through the hard part",
     },
     {
       icon: "key",
       title: "Full IP ownership & architectural independence",
-      body: "You own 100% of your models, pipelines and code, built on open, portable standards.",
+      body: "You retain 100% ownership of your custom models, data pipelines, and codebase; built on open, portable standards without proprietary platform traps.",
       differentiator: "Zero vendor lock-in",
     },
     {
       icon: "layers",
       title: "AI and data foundation together",
-      body: "Data engineering, retrieval layers and security built alongside the model.",
+      body: "Data engineering, knowledge retrieval layers, and security controls built alongside the model.",
       differentiator: "The foundation, not just the interface",
     },
     {
       icon: "shield",
       title: "Enterprise-grade by design",
-      body: "Guardrails, zero-trust security, cost control and observability from day one.",
+      body: "Model guardrails, zero-trust security, cost optimization, and observability embedded from day one.",
       differentiator: "Production-ready from the first commit",
     },
     {
       icon: "trending",
       title: "From one use case to an operating model",
-      body: "Once value is proven, we build the platform to scale AI across the enterprise.",
+      body: "Once initial value is proven, we establish the platform architecture to scale AI across the enterprise.",
       differentiator: "Point solutions to an AI-enabled enterprise",
     },
   ],
@@ -326,11 +333,118 @@ export const operatingModel = {
 
 export const finalCta = {
   eyebrow: "Next Steps",
-  title: "Discuss your roadmap with an AI architect.",
-  body: "In a focused 30-minute technical session, we’ll assess your constraints and map a practical path to production. No sales pitch, no commitment.",
+  title: "Discuss your roadmap with an AI solutions architect.",
+  body: "Share where your team is facing friction. In a focused 30-minute technical session, we will assess your current constraints and outline a practical path toward production. No sales pitch, no commitment.",
   cta: { label: "Schedule a Technical Discovery Call", href: "#next-steps" },
-  micro: ["Direct access to senior engineers", "Zero obligation"],
+  micro: ["Direct access to senior engineering leads", "Zero obligation"],
   stat: { value: "30", label: "Minute session" },
+};
+
+/* ------------------------------------------------------------------------ */
+/* Sections the content doc lists with a heading only. The entries below are */
+/* PLACEHOLDER (synthetic) content: swap in real logos, case studies, tools  */
+/* and testimonials before launch.                                            */
+/* ------------------------------------------------------------------------ */
+
+export const trust = {
+  label: "Trusted by Teams At",
+  // Fictional organisations, shown as wordmarks until real client logos are approved.
+  logos: [
+    { name: "Northwind Health", mark: "health" },
+    { name: "Atlas Freight", mark: "logistics" },
+    { name: "Lumen Capital", mark: "fintech" },
+    { name: "Brightpath Learning", mark: "edtech" },
+    { name: "Keystone Realty", mark: "realestate" },
+    { name: "Forge Industrial", mark: "manufacturing" },
+    { name: "Harbor Mutual", mark: "insurance" },
+    { name: "Summit Build Co.", mark: "construction" },
+    { name: "CivicGrid", mark: "government" },
+  ],
+};
+
+export const caseStudies = {
+  eyebrow: "Case Studies",
+  title: "Work we've delivered. Proof, not promises",
+  items: [
+    {
+      industry: "Healthcare",
+      client: "Regional healthcare network",
+      title: "Clinical document intelligence in production",
+      summary:
+        "A governed RAG platform that reads referral letters and discharge notes, routes cases and drafts summaries inside the existing EHR workflow.",
+      metrics: [
+        { value: "68%", label: "Faster case triage" },
+        { value: "12 wks", label: "PoC to production" },
+        { value: "0", label: "PHI leaving the VPC" },
+      ],
+    },
+    {
+      industry: "Logistics & Supply Chain",
+      client: "Global freight forwarder",
+      title: "Agentic exception handling across 40+ lanes",
+      summary:
+        "Autonomous agents that detect shipment exceptions, query carrier systems and resolve or escalate them with a full audit trail.",
+      metrics: [
+        { value: "3.4×", label: "Exceptions handled per agent" },
+        { value: "41%", label: "Fewer late deliveries" },
+        { value: "24/7", label: "Coverage without new headcount" },
+      ],
+    },
+    {
+      industry: "Fintech",
+      client: "Mid-market digital lender",
+      title: "Cost-optimised credit decisioning",
+      summary:
+        "Right-sized models, semantic caching and smart routing replaced a single large model, with drift monitoring and explainability for regulators.",
+      metrics: [
+        { value: "57%", label: "Lower inference cost" },
+        { value: "<300ms", label: "P95 decision latency" },
+        { value: "100%", label: "Decisions explainable" },
+      ],
+    },
+  ],
+  cta: { label: "Discuss a similar project", href: "#next-steps" },
+};
+
+export const techStack = {
+  eyebrow: "Technology Ecosystem",
+  title: "Engineered to integrate with your existing enterprise stack.",
+  body: "We work inside the platforms you already run, so new AI capability plugs into today's data, cloud and security estate instead of replacing it.",
+  // Representative tooling; confirm the final list before launch.
+  groups: [
+    { name: "Cloud", items: ["AWS", "Microsoft Azure", "Google Cloud", "Private VPC / On-prem"] },
+    { name: "Data", items: ["Snowflake", "Databricks", "PostgreSQL", "Kafka", "Airflow", "dbt"] },
+    { name: "AI & LLMs", items: ["PyTorch", "Hugging Face", "OpenAI", "Anthropic", "Llama", "LangChain"] },
+    { name: "Retrieval", items: ["pgvector", "Pinecone", "Weaviate", "Elasticsearch"] },
+    { name: "MLOps", items: ["MLflow", "Kubeflow", "Weights & Biases", "SageMaker", "Vertex AI"] },
+    { name: "Platform & Security", items: ["Kubernetes", "Docker", "Terraform", "GitHub Actions", "Vault"] },
+  ],
+};
+
+export const testimonials = {
+  eyebrow: "Testimonials",
+  title: "Don't take our word for it. Take theirs.",
+  // Placeholder quotes with anonymised roles; replace with approved client testimonials.
+  items: [
+    {
+      quote:
+        "MoogleLabs took a pilot that had been stuck for a year and had it running in production in a quarter, with the security sign-off our board needed.",
+      role: "VP of Data & AI",
+      company: "Regional healthcare network",
+    },
+    {
+      quote:
+        "They didn't just build a model. They built the pipelines, guardrails and monitoring around it, and our team owns every line of it.",
+      role: "Chief Technology Officer",
+      company: "Global freight forwarder",
+    },
+    {
+      quote:
+        "Our inference bill dropped by more than half while accuracy went up. The FinOps thinking was built in from the first architecture review.",
+      role: "Head of Engineering",
+      company: "Digital lending platform",
+    },
+  ],
 };
 
 export const faq = {
@@ -338,32 +452,32 @@ export const faq = {
   title: { lead: "Frequently", tail: "Asked Questions" },
   items: [
     {
-      q: "How do you make sure our AI pilots reach production?",
-      a: "Most proofs-of-concept fail because they’re built in isolated sandboxes. We engineer for production from day one, building data ingestion, MLOps pipelines, testing and fallback routing alongside the model.",
+      q: "How do you ensure our AI pilots actually reach production instead of stalling in testing?",
+      a: "Most proofs-of-concept fail because they are built in isolated sandboxes without accounting for live data pipelines, latency budgets, or security requirements. We engineer for production constraints from day one, building data ingestion, MLOps deployment pipelines, automated testing, and fallback routing concurrently with the model so your system integrates cleanly into existing enterprise infrastructure.",
     },
     {
-      q: "Who owns the IP, models and code after delivery?",
-      a: "You do: 100% of the custom code, fine-tuned weights, pipelines and documentation. We build on open, portable frameworks with zero vendor lock-in, so your teams can run and extend everything independently.",
+      q: "Who owns the intellectual property, custom models, and codebase once a project is delivered?",
+      a: "You retain 100% ownership of all custom code, fine-tuned weights, data pipelines, and architectural documentation. We build on open, portable cloud and MLOps frameworks with zero proprietary vendor lock-in, ensuring your internal teams can maintain, audit, and extend the platform independently.",
     },
     {
-      q: "How do you protect our data, prevent hallucinations and stay compliant?",
-      a: "Governance runs through every stage: private VPC or on-premise hosting so your data never trains public models, RAG grounded in verified sources, plus guardrails, red-teaming and audit logging.",
+      q: "How do you protect proprietary enterprise data, prevent model hallucinations, and ensure compliance?",
+      a: "Governance is embedded across every stage of delivery rather than treated as a post-launch checklist. We deploy private VPC or on-premise model hosting so your data never trains public third-party models, enforce Retrieval-Augmented Generation (RAG) grounded strictly in verified enterprise sources, and implement automated guardrails, red-teaming, and audit logging aligned with your regulatory standards.",
     },
     {
-      q: "Our data is fragmented across legacy systems. Can we still start?",
-      a: "Yes. There’s no need for a multi-year data overhaul. We build targeted, AI-ready pipelines for your first use cases, so you launch securely while modernizing the wider data foundation step by step.",
+      q: "Our enterprise data is currently fragmented across legacy systems. Can we still start an AI initiative?",
+      a: "Yes. You do not need a multi-year data warehouse overhaul before capturing AI value. Our data engineering team builds targeted, AI-ready ingestion and vector pipelines specifically scoped to the workflows required for your initial use cases. This allows you to launch securely while modernizing your broader data foundation incrementally.",
     },
     {
-      q: "How do you keep compute and LLM costs under control?",
-      a: "AI FinOps is built into the architecture: right-sized small language models, quantization, semantic caching and smart query routing instead of oversized models for every task. Costs scale predictably with value.",
+      q: "How do you keep cloud compute and LLM inference costs from spiraling as usage grows?",
+      a: "We incorporate AI FinOps directly into our architecture. Rather than defaulting to oversized, expensive foundation models for every task, we optimize unit economics through right-sized small language models (SLMs), model quantization, semantic caching, and intelligent query routing. This ensures infrastructure costs scale predictably alongside business value.",
     },
     {
-      q: "How are you different from staffing agencies or AI boutiques?",
-      a: "Agencies supply headcount without architectural accountability, and boutiques often lack enterprise depth in security, ERP integration and QA. We’re one accountable team across data, AI/ML, cloud MLOps, governance and QA.",
+      q: "How does MoogleLabs differ from traditional IT staffing agencies or niche AI boutiques?",
+      a: "Staffing agencies supply disconnected headcount without architectural accountability, while niche AI boutiques often lack the enterprise engineering depth required for cloud security, legacy ERP integration, and quality assurance. We provide a single, accountable team covering the full stack: data engineering, AI/ML development, cloud MLOps, security governance, and automated QA.",
     },
     {
-      q: "What does an engagement look like, and how fast are results?",
-      a: "It depends on your maturity. A fixed-scope 2–4 week AI Readiness & Strategy Sprint validates feasibility and ROI; defined initiatives typically go live in 8–16 weeks, with milestone-based delivery throughout.",
+      q: "What does a typical engagement look like, and how quickly can we see measurable results?",
+      a: "Engagements are structured around your current maturity. For organizations defining their roadmap, a fixed-scope 2 to 4 week AI Readiness & Strategy Sprint validates feasibility and ROI. For defined initiatives, production-grade deployments typically reach live operational environments within 8 to 16 weeks, using milestone-based delivery so you see working capability early.",
     },
   ],
 };
@@ -374,7 +488,9 @@ export const footer = {
   explore: [
     { label: "Services", href: "#services" },
     { label: "Industries", href: "#industries" },
+    { label: "Case studies", href: "#case-studies" },
     { label: "Enterprise delivery", href: "#enterprise" },
+    { label: "Tech stack", href: "#tech-stack" },
     { label: "Delivery stages", href: "#delivery" },
     { label: "Why MoogleLabs", href: "#why" },
     { label: "Operating model", href: "#operating-model" },

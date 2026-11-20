@@ -7,6 +7,9 @@ import { scene } from "@/lib/scene";
 import { hero } from "@/content/site";
 import { BlinkSquare } from "@/components/ui/Bits";
 
+/** Card height (px): fits the longest friction point in 4 lines on small phones. */
+const CARD_H = 168;
+
 /** Seconds each friction card stays in front before the deck advances. */
 const HOLD = 3.6;
 /** How far each card behind peeks out above the one in front (px). */
@@ -142,7 +145,7 @@ export function FrictionDeck() {
       </div>
 
       {/* The deck: cards are stacked bottom-aligned; the ones behind peek out above. */}
-      <div className="relative mt-5" style={{ height: 148 + PEEK * 2 }}>
+      <div className="relative mt-5" style={{ height: CARD_H + PEEK * 2 }}>
         {friction.options.map((option, i) => {
           const front = i === active;
           return (
@@ -154,7 +157,7 @@ export function FrictionDeck() {
               href={option.href}
               tabIndex={front ? 0 : -1}
               aria-hidden={!front}
-              className="chamfer group absolute inset-x-0 bottom-0 flex h-[148px] origin-bottom flex-col justify-between border-t-2 border-brand-light/70 bg-ink p-5 text-white [--cut:12px]"
+              className="chamfer group absolute inset-x-0 bottom-0 flex h-[168px] origin-bottom flex-col justify-between border-t-2 border-brand-light/70 bg-ink p-5 text-white [--cut:12px]"
               style={{ zIndex: total - ((i - active + total) % total) }}
             >
               <span className="flex items-center justify-between font-heading text-[11px] font-semibold tracking-wider uppercase">
@@ -166,7 +169,9 @@ export function FrictionDeck() {
                   Friction point
                 </span>
               </span>
-              <span className="pr-12 font-heading text-[17px] leading-snug font-semibold uppercase">{option.label}</span>
+              <span className="pr-12 font-heading text-[15px] leading-snug font-semibold uppercase phone:text-[16px] tablet:text-[17px]">
+                {option.label}
+              </span>
               <span className="chamfer absolute right-4 bottom-4 flex size-9 items-center justify-center bg-gradient-to-r from-brand-deep to-brand-light transition-transform duration-300 [--cut:6px] group-hover:translate-x-1">
                 <LuArrowRight aria-hidden className="size-4" />
               </span>

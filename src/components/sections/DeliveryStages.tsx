@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { LuCircleCheck, LuShieldCheck } from "react-icons/lu";
+import { LuCircleCheck, LuShieldCheck, LuClock } from "react-icons/lu";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { DELIVERY_LEN, GOVERNANCE_BEAT, STAGE_BEATS, holdOf } from "@/lib/scene";
 import { registerAnchor } from "@/lib/lenis";
@@ -115,15 +115,20 @@ export function DeliveryStages() {
                 {stage.n}
               </span>
               <div className="relative w-full max-w-[720px] text-center">
-                <div data-stage-item className="flex justify-center">
+                <div data-stage-item className="flex flex-wrap items-center justify-center gap-2">
                   <Supertitle variant="brand" number={stage.n} icon={<Icon className="size-3.5" />}>
                     {stage.name}
                   </Supertitle>
+                  {/* time frame for this stage */}
+                  <span className="chamfer flex h-7 items-center gap-1.5 bg-ink px-2.5 font-heading text-[11px] font-semibold tracking-wider text-white uppercase [--cut:5px]">
+                    <LuClock aria-hidden className="size-3.5 text-lilac" />
+                    {stage.duration}
+                  </span>
                 </div>
                 <p data-stage-item className="mt-6 font-heading text-[11px] font-semibold tracking-[0.2em] text-brand uppercase">
                   Focus
                 </p>
-                <h3 data-stage-item className="is-h2 mt-2 text-balance">
+                <h3 data-stage-item className="is-h2 mt-2 text-balance text-[clamp(1.25rem,min(6.4vw,3.6vh),1.875rem)]! tablet:text-[clamp(1.5rem,min(4.5vw,4.5vh),2.25rem)]! laptop:text-[clamp(1.75rem,min(3vw,5vh),3rem)]!">
                   {stage.focus}
                 </h3>
                 <p data-stage-item className="mx-auto mt-5 max-w-[580px] text-[13px] leading-relaxed text-ink/80 tablet:text-[14px]">
@@ -178,6 +183,9 @@ export function DeliveryStages() {
                 >
                   <span className="text-brand">{stage.n}</span>
                   <span className="hidden tablet:inline">{stage.name}</span>
+                  <span className="hidden font-body text-[10px] tracking-normal text-ink/60 normal-case laptop:inline">
+                    · {stage.duration}
+                  </span>
                 </span>
                 <span className="block h-[3px] bg-ink/15">
                   <span data-rail-fill className="block h-full origin-left scale-x-0 bg-brand" />

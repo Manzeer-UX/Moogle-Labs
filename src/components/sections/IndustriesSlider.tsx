@@ -93,7 +93,7 @@ export default function IndustriesSlider() {
             <SwiperSlide key={item.name} className="!w-[min(82vw,380px)] pl-4 laptop:!w-[400px]">
               <article
                 data-ind-card
-                className="chamfer-alt relative flex h-full min-h-[340px] flex-col overflow-hidden bg-white p-6 text-ink [--cut:52px] laptop:min-h-[430px]"
+                className="chamfer-alt @container relative flex h-full min-h-[340px] flex-col overflow-hidden bg-white p-6 text-ink [--cut:52px] laptop:min-h-[430px]"
               >
                 <div className="supertitle flex items-center gap-2 text-[13px]">
                   <span>AI</span>
@@ -104,7 +104,9 @@ export default function IndustriesSlider() {
                 <span className="chamfer mt-12 flex size-16 items-center justify-center bg-ink text-white [--cut:10px] laptop:size-20">
                   <Icon aria-hidden className="size-8 laptop:size-10" />
                 </span>
-                <h3 className="is-h2 mt-auto max-w-[90%] pt-10 pb-12">{item.name}</h3>
+                <h3 className="is-h2 mt-auto pt-10 pb-12 text-[clamp(1.125rem,8cqw,2rem)]! leading-[1.08]! [overflow-wrap:anywhere]">
+                  {item.name}
+                </h3>
                 <div className="absolute right-6 bottom-6">
                   <Barcode />
                 </div>
