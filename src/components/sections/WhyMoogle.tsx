@@ -65,7 +65,7 @@ export function WhyMoogle() {
           className="absolute right-4 bottom-8 left-4 tablet:right-auto tablet:bottom-12 tablet:left-8 tablet:max-w-[min(760px,55vw)]"
         >
           <Supertitle variant="brand">{why.eyebrow}</Supertitle>
-          <h2 className="is-h2 mt-5 text-balance">
+          <h2 className="is-h2 mt-5 text-balance text-[clamp(1.25rem,min(6.4vw,3.6vh),1.875rem)]! tablet:text-[clamp(1.5rem,min(4.5vw,4.5vh),2.25rem)]! laptop:text-[clamp(1.75rem,min(3vw,5vh),3rem)]!">
             {why.title.lead} {why.title.tail}
           </h2>
           <p className="mt-5 max-w-[540px] text-[13.5px] leading-relaxed text-ink/80">{why.body}</p>

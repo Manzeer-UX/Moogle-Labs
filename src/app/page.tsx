@@ -10,6 +10,10 @@ import { WhyMoogle } from "@/components/sections/WhyMoogle";
 import { OperatingModel } from "@/components/sections/OperatingModel";
 import { FinalCta } from "@/components/sections/FinalCta";
 import { Faq } from "@/components/sections/Faq";
+import { TrustBar } from "@/components/sections/TrustBar";
+import { CaseStudies } from "@/components/sections/CaseStudies";
+import { TechStack } from "@/components/sections/TechStack";
+import { Testimonials } from "@/components/sections/Testimonials";
 
 export default function Home() {
   return (
@@ -18,12 +22,16 @@ export default function Home() {
       <SceneCanvas />
       <main className="relative z-10">
         <Hero />
+        <TrustBar />
         <Capabilities />
         <Industries />
+        <CaseStudies />
         <EnterpriseDelivery />
+        <TechStack />
         <DeliveryStages />
         <WhyMoogle />
         <OperatingModel />
+        <Testimonials />
         <FinalCta />
         <Faq />
       </main>

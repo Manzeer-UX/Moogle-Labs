@@ -29,8 +29,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${oxanium.variable} ${jetbrains.variable}`}>
-      <body>
+    // Browser extensions (e.g. Grammarly) inject attributes into <html>/<body>
+    // before React hydrates. suppressHydrationWarning ignores attribute
+    // mismatches on these two elements only (one level deep), so real
+    // hydration problems elsewhere in the tree are still reported.
+    <html lang="en" className={`${oxanium.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <noscript>
           <style>{`[data-loader]{display:none!important}`}</style>
         </noscript>
