@@ -45,9 +45,9 @@ export function Faq() {
   return (
     <section id="faq" ref={ref} data-header="light" className="relative bg-light-grey py-24 text-ink laptop:py-36">
       <div className="grid gap-12 px-4 tablet:px-8 laptop:grid-cols-12">
-        <div className="self-start laptop:sticky laptop:top-32 laptop:col-span-4">
+        <div className="min-w-0 self-start laptop:sticky laptop:top-32 laptop:col-span-5">
           <Supertitle variant="brand">{faq.eyebrow}</Supertitle>
-          <Reveal as="h2" className="is-h1 mt-6">
+          <Reveal as="h2" className="is-h1 mt-6 break-words laptop:text-[clamp(2.5rem,4.2vw,4.5rem)]!">
             <span className="block overflow-hidden pb-[0.04em]">
               <span data-reveal className="block text-balance">
                 {faq.title.lead} {faq.title.tail}
@@ -56,7 +56,7 @@ export function Faq() {
           </Reveal>
         </div>
 
-        <ul data-faq-list className="border-b border-ink/20 laptop:col-span-8 laptop:col-start-5">
+        <ul data-faq-list className="border-b border-ink/20 laptop:col-span-7 laptop:col-start-6">
           {faq.items.map((item, i) => {
             const isOpen = open === i;
             return (

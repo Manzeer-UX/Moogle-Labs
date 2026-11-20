@@ -39,7 +39,7 @@ export function ScrambleText({ text, className = "" }: { text: string; className
   }, [text]);
 
   return (
-    <span className={`relative inline-block whitespace-nowrap ${className}`}>
+    <span className={`relative inline-block ${/\bwhitespace-/.test(className) ? "" : "whitespace-nowrap"} ${className}`}>
       <span className="invisible" aria-hidden>
         {text}
       </span>

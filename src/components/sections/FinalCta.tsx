@@ -21,7 +21,7 @@ export function FinalCta() {
             {finalCta.body}
           </RevealText>
           <div className="flex flex-col gap-5">
-            <ChamferButton href={finalCta.cta.href} variant="white" className="h-12 self-start px-6">
+            <ChamferButton href={finalCta.cta.href} variant="white" className="min-h-12 self-start px-6">
               {finalCta.cta.label}
             </ChamferButton>
             <ul className="flex flex-wrap gap-x-8 gap-y-3 text-[13px] text-white/85">

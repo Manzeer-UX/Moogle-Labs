@@ -25,9 +25,10 @@ export function ChamferButton({ href, children, variant = "brand", className = "
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className={`chamfer inline-flex h-11 shrink-0 items-center gap-3 px-5 font-heading text-[13px] font-semibold tracking-[0.03em] uppercase transition-[background-color,color,scale,filter] duration-300 [--cut:8px] active:scale-95 ${variants[variant]} ${className}`}
+      className={`chamfer inline-flex min-h-11 max-w-full shrink-0 items-center gap-3 px-5 py-2.5 text-left font-heading text-[13px] leading-tight font-semibold tracking-[0.03em] uppercase transition-[background-color,color,scale,filter] duration-300 [--cut:8px] active:scale-95 ${variants[variant]} ${className}`}
     >
-      <ScrambleText text={children} />
+      {/* long labels may wrap on narrow screens instead of overflowing */}
+      <ScrambleText text={children} className="whitespace-normal" />
       {icon}
     </a>
   );

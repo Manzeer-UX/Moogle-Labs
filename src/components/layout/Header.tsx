@@ -223,7 +223,9 @@ function MobileMenu({ open, onClose, anchorBase }: { open: boolean; onClose: () 
     <div
       ref={ref}
       style={{ display: "none" }}
-      className="fixed inset-0 z-[60] flex-col bg-ink px-4 pt-5 pb-8 text-white"
+      // scrolls on short phones instead of letting the CTA collide with the links
+      data-lenis-prevent
+      className="fixed inset-0 z-[60] flex-col overflow-y-auto overscroll-contain bg-ink px-4 pt-5 pb-8 text-white"
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
@@ -269,7 +271,7 @@ function MobileMenu({ open, onClose, anchorBase }: { open: boolean; onClose: () 
           </span>
         ))}
       </nav>
-      <div className="relative mt-auto overflow-hidden">
+      <div className="relative mt-auto shrink-0 overflow-hidden pt-10">
         <a
           data-m
           href={site.contactHref}
